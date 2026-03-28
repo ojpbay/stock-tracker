@@ -23,76 +23,7 @@ import { PriceBadgeComponent } from '../../../shared/components/price-badge/pric
     PriceBadgeComponent,
   ],
   providers: [StocksStore],
-  template: `
-    <div class="detail-container">
-      <button mat-button (click)="goBack()">
-        <mat-icon>arrow_back</mat-icon>
-        Back to Search
-      </button>
-
-      @if (store.loading()) {
-        <div class="loading-container">
-          <mat-spinner diameter="48" />
-        </div>
-      }
-
-      @if (store.error()) {
-        <mat-card class="error-card">
-          <mat-card-content>
-            <p>{{ store.error() }}</p>
-          </mat-card-content>
-        </mat-card>
-      }
-
-      @if (store.selectedQuote(); as quote) {
-        <mat-card class="quote-card">
-          <mat-card-header>
-            <mat-card-title>{{ quote.companyName }}</mat-card-title>
-            <mat-card-subtitle>{{ quote.symbol }} &bull; {{ quote.exchange }} &bull; {{ quote.currency }}</mat-card-subtitle>
-          </mat-card-header>
-
-          <mat-card-content>
-            <div class="price-section">
-              <app-price-badge
-                [price]="quote.currentPrice"
-                [priceChange]="quote.priceChange"
-                [priceChangePercent]="quote.priceChangePercent"
-                [currency]="quote.currency"
-              />
-            </div>
-
-            <mat-divider />
-
-            <div class="metrics-grid">
-              <div class="metric">
-                <span class="metric-label">52-Week High</span>
-                <span class="metric-value">{{ quote.high52Week | number: '1.2-2' }}</span>
-              </div>
-              <div class="metric">
-                <span class="metric-label">52-Week Low</span>
-                <span class="metric-value">{{ quote.low52Week | number: '1.2-2' }}</span>
-              </div>
-              <div class="metric">
-                <span class="metric-label">Market Cap</span>
-                <span class="metric-value">{{ formatMarketCap(quote.marketCap) }}</span>
-              </div>
-              <div class="metric">
-                <span class="metric-label">Last Updated</span>
-                <span class="metric-value">{{ quote.dataTimestamp | date: 'medium' }}</span>
-              </div>
-            </div>
-          </mat-card-content>
-
-          <mat-card-actions>
-            <button mat-raised-button color="primary" (click)="addToWatchlist(quote.symbol)">
-              <mat-icon>add</mat-icon>
-              Add to Watchlist
-            </button>
-          </mat-card-actions>
-        </mat-card>
-      }
-    </div>
-  `,
+  templateUrl: './stock-detail.component.html',
   styles: [`
     .detail-container {
       max-width: 640px;

@@ -1,0 +1,56 @@
+
+    <div class="add-tx-container">
+      <button mat-button (click)="goBack()">
+        <mat-icon>arrow_back</mat-icon>
+        Back
+      </button>
+
+      <h1>Add Transaction</h1>
+
+      <mat-button-toggle-group [value]="selectedType" (change)="onTypeChange($event.value)">
+        <mat-button-toggle value="Buy">Buy</mat-button-toggle>
+        <mat-button-toggle value="Sell">Sell</mat-button-toggle>
+        <mat-button-toggle value="Dividend">Dividend</mat-button-toggle>
+      </mat-button-toggle-group>
+
+      <form [formGroup]="form" (ngSubmit)="onSubmit()" class="form">
+        <mat-form-field appearance="outline" class="full-width">
+          <mat-label>Date</mat-label>
+          <input matInput [matDatepicker]="picker" formControlName="date" [max]="today" />
+          <mat-datepicker-toggle matIconSuffix [for]="picker" />
+          <mat-datepicker #picker />
+        </mat-form-field>
+
+        @if (selectedType === 'Buy' || selectedType === 'Sell') {
+          <mat-form-field appearance="outline" class="full-width">
+            <mat-label>Units</mat-label>
+            <input matInput type="number" formControlName="units" min="0.0001" step="0.0001" />
+            @if (form.get('units')?.hasError('min')) {
+              <mat-error>Units must be greater than zero</mat-error>
+            }
+          </mat-form-field>
+
+          <mat-form-field appearance="outline" class="full-width">
+            <mat-label>Price per unit</mat-label>
+            <input matInput type="number" formControlName="pricePerUnit" min="0.0001" step="0.01" />
+            @if (form.get('pricePerUnit')?.hasError('min')) {
+              <mat-error>Price must be greater than zero</mat-error>
+            }
+          </mat-form-field>
+        }
+
+        @if (selectedType === 'Dividend') {
+          <mat-form-field appearance="outline" class="full-width">
+            <mat-label>Dividend amount</mat-label>
+            <input matInput type="number" formControlName="dividendAmount" min="0.0001" step="0.01" />
+            @if (form.get('dividendAmount')?.hasError('min')) {
+              <mat-error>Amount must be greater than zero</mat-error>
+            }
+          </mat-form-field>
+        }
+
+        <button mat-raised-button color="primary" type="submit" [disabled]="form.invalid">
+          Record {{ selectedType }}
+        </button>
+      </form>
+    </div>

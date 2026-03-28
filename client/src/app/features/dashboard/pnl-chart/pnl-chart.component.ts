@@ -7,15 +7,7 @@ import { HoldingDashboardRow } from '../services/dashboard.service';
   selector: 'app-pnl-chart',
   standalone: true,
   imports: [BaseChartDirective],
-  template: `
-    <div class="chart-container">
-      <canvas baseChart
-        [data]="chartData()"
-        [options]="chartOptions"
-        type="bar"
-      ></canvas>
-    </div>
-  `,
+  templateUrl: './pnl-chart.component.html',
   styles: [`
     .chart-container {
       position: relative;

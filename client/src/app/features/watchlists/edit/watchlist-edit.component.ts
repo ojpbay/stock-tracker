@@ -21,6 +21,7 @@ import { WatchlistsService } from '../services/watchlists.service';
       <button mat-raised-button color="warn" [mat-dialog-close]="true" cdkFocusInitial>Delete</button>
     </mat-dialog-actions>
   `,
+
 })
 export class ConfirmDialogComponent {
   protected readonly data = inject<{ message: string }>(MAT_DIALOG_DATA);
@@ -38,51 +39,7 @@ export class ConfirmDialogComponent {
     MatDialogModule,
   ],
   providers: [WatchlistsStore],
-  template: `
-    <div class="edit-container">
-      <button mat-button (click)="goBack()">
-        <mat-icon>arrow_back</mat-icon>
-        Back
-      </button>
-
-      <h1>{{ isNew ? 'New Watchlist' : 'Edit Watchlist' }}</h1>
-
-      <form [formGroup]="form" (ngSubmit)="onSubmit()">
-        <mat-form-field appearance="outline" class="full-width">
-          <mat-label>Name</mat-label>
-          <input matInput formControlName="name" placeholder="e.g. Tech Stocks" />
-          @if (form.get('name')?.hasError('required')) {
-            <mat-error>Name is required</mat-error>
-          }
-          @if (form.get('name')?.hasError('maxlength')) {
-            <mat-error>Name must not exceed 100 characters</mat-error>
-          }
-        </mat-form-field>
-
-        <mat-form-field appearance="outline" class="full-width">
-          <mat-label>Description</mat-label>
-          <textarea matInput formControlName="description" rows="3" placeholder="Optional description"></textarea>
-        </mat-form-field>
-
-        <div class="form-actions">
-          <button mat-raised-button color="primary" type="submit" [disabled]="form.invalid || store.loading()">
-            {{ isNew ? 'Create' : 'Save' }}
-          </button>
-
-          @if (!isNew) {
-            <button mat-stroked-button color="warn" type="button" (click)="confirmDelete()">
-              <mat-icon>delete</mat-icon>
-              Delete
-            </button>
-          }
-        </div>
-      </form>
-
-      @if (store.error()) {
-        <p class="error-message">{{ store.error() }}</p>
-      }
-    </div>
-  `,
+  templateUrl: './watchlist-edit.component.html',
   styles: [`
     .edit-container {
       max-width: 560px;

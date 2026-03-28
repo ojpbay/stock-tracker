@@ -6,15 +6,7 @@ import { MatIconModule } from '@angular/material/icon';
   selector: 'app-pnl-indicator',
   standalone: true,
   imports: [DecimalPipe, MatIconModule],
-  template: `
-    <span class="pnl-wrapper" [class]="cssClass()">
-      <mat-icon class="pnl-icon">{{ icon() }}</mat-icon>
-      <span class="pnl-value">{{ formattedValue() }}</span>
-      @if (showPercent() && pnlPercent() !== null) {
-        <span class="pnl-percent">({{ pnlPercent() | number:'1.2-2' }}%)</span>
-      }
-    </span>
-  `,
+  templateUrl: './pnl-indicator.component.html',
   styles: [`
     .pnl-wrapper {
       display: inline-flex;

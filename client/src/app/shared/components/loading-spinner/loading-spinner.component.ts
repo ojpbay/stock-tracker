@@ -5,14 +5,7 @@ import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
   selector: 'app-loading-spinner',
   standalone: true,
   imports: [MatProgressSpinnerModule],
-  template: `
-    <div class="spinner-container">
-      <mat-spinner [diameter]="diameter()"></mat-spinner>
-      @if (message()) {
-        <p class="spinner-message">{{ message() }}</p>
-      }
-    </div>
-  `,
+  templateUrl: './loading-spinner.component.html',
   styles: [`
     .spinner-container {
       display: flex;

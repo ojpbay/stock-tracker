@@ -22,57 +22,7 @@ import { NotificationService } from '../../../core/services/notification.service
     MatDatepickerModule,
     MatNativeDateModule,
   ],
-  template: `
-    <div class="add-container">
-      <button mat-button (click)="goBack()">
-        <mat-icon>arrow_back</mat-icon>
-        Back
-      </button>
-
-      <h1>Add to Watchlist</h1>
-      <p>Adding <strong>{{ symbol }}</strong> to this watchlist</p>
-
-      <form [formGroup]="form" (ngSubmit)="onSubmit()">
-        <mat-form-field appearance="outline" class="full-width">
-          <mat-label>Number of units</mat-label>
-          <input matInput type="number" formControlName="units" min="0.0001" step="0.0001" />
-          @if (form.get('units')?.hasError('required')) {
-            <mat-error>Units is required</mat-error>
-          }
-          @if (form.get('units')?.hasError('min')) {
-            <mat-error>Units must be greater than zero</mat-error>
-          }
-        </mat-form-field>
-
-        <mat-form-field appearance="outline" class="full-width">
-          <mat-label>Purchase price per unit</mat-label>
-          <input matInput type="number" formControlName="pricePerUnit" min="0.0001" step="0.01" />
-          @if (form.get('pricePerUnit')?.hasError('required')) {
-            <mat-error>Price per unit is required</mat-error>
-          }
-          @if (form.get('pricePerUnit')?.hasError('min')) {
-            <mat-error>Price must be greater than zero</mat-error>
-          }
-        </mat-form-field>
-
-        <mat-form-field appearance="outline" class="full-width">
-          <mat-label>Purchase date</mat-label>
-          <input matInput [matDatepicker]="picker" formControlName="purchaseDate" [max]="today" />
-          <mat-datepicker-toggle matIconSuffix [for]="picker" />
-          <mat-datepicker #picker />
-          @if (form.get('purchaseDate')?.hasError('required')) {
-            <mat-error>Purchase date is required</mat-error>
-          }
-        </mat-form-field>
-
-        <div class="form-actions">
-          <button mat-raised-button color="primary" type="submit" [disabled]="form.invalid || submitting">
-            Add to Watchlist
-          </button>
-        </div>
-      </form>
-    </div>
-  `,
+  templateUrl: './add-holding.component.html',
   styles: [`
     .add-container {
       max-width: 480px;

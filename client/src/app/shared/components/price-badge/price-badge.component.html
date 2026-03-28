@@ -1,0 +1,8 @@
+
+    <span class="price-badge">
+      <span class="current-price">{{ currency() }}{{ price() | number:'1.2-2' }}</span>
+      <span class="price-change" [class]="changeClass()">
+        {{ priceChange() >= 0 ? '+' : '' }}{{ priceChange() | number:'1.2-2' }}
+        ({{ priceChangePercent() >= 0 ? '+' : '' }}{{ priceChangePercent() | number:'1.2-2' }}%)
+      </span>
+    </span>

@@ -5,15 +5,7 @@ import { DecimalPipe } from '@angular/common';
   selector: 'app-price-badge',
   standalone: true,
   imports: [DecimalPipe],
-  template: `
-    <span class="price-badge">
-      <span class="current-price">{{ currency() }}{{ price() | number:'1.2-2' }}</span>
-      <span class="price-change" [class]="changeClass()">
-        {{ priceChange() >= 0 ? '+' : '' }}{{ priceChange() | number:'1.2-2' }}
-        ({{ priceChangePercent() >= 0 ? '+' : '' }}{{ priceChangePercent() | number:'1.2-2' }}%)
-      </span>
-    </span>
-  `,
+  templateUrl: './price-badge.component.html',
   styles: [`
     .price-badge {
       display: inline-flex;

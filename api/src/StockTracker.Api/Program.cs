@@ -4,7 +4,6 @@ using StockTracker.Api.Infrastructure.StockData;
 using FluentValidation;
 using FluentValidation.Results;
 using System.Reflection;
-using Microsoft.Extensions.Options;
 using Microsoft.AspNetCore.Diagnostics;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -55,15 +54,15 @@ builder.Services.AddScoped<IWatchlistRepository, WatchlistRepository>();
 builder.Services.AddScoped<ITransactionRepository, TransactionRepository>();
 
 // ── Finnhub Stock Data ─────────────────────────────────────────────────────
-builder.Services.Configure<FinnhubOptions>(
-    builder.Configuration.GetSection(FinnhubOptions.SectionName));
+var finnhubOptions = builder.Configuration
+    .GetSection(FinnhubOptions.SectionName)
+    .Get<FinnhubOptions>() ?? new FinnhubOptions();
 
-builder.Services.AddHttpClient<IStockDataService, FinnhubClient>((sp, client) =>
+builder.Services.AddHttpClient<IStockDataService, FinnhubClient>(client =>
 {
-    var options = sp.GetRequiredService<Microsoft.Extensions.Options.IOptions<FinnhubOptions>>().Value;
-    client.BaseAddress = new Uri(options.BaseUrl);
-    if (!string.IsNullOrEmpty(options.ApiKey))
-        client.DefaultRequestHeaders.Add("X-Finnhub-Token", options.ApiKey);
+    client.BaseAddress = new Uri(finnhubOptions.BaseUrl);
+    if (!string.IsNullOrEmpty(finnhubOptions.ApiKey))
+        client.DefaultRequestHeaders.Add("X-Finnhub-Token", finnhubOptions.ApiKey);
 });
 
 // ── CORS ───────────────────────────────────────────────────────────────────

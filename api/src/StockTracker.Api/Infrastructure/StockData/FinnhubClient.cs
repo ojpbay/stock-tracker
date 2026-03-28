@@ -1,5 +1,5 @@
 using System.Text.Json;
-using Microsoft.Extensions.Options;
+using System.Text.Json.Serialization;
 
 namespace StockTracker.Api.Infrastructure.StockData;
 
@@ -7,7 +7,7 @@ namespace StockTracker.Api.Infrastructure.StockData;
 /// HTTP client for the Finnhub stock data API.
 /// Full implementation completed in US1 (T029).
 /// </summary>
-public class FinnhubClient(HttpClient httpClient, IOptions<FinnhubOptions> options) : IStockDataService
+public class FinnhubClient(HttpClient httpClient) : IStockDataService
 {
     private static readonly JsonSerializerOptions JsonOptions = new()
     {
@@ -24,19 +24,16 @@ public class FinnhubClient(HttpClient httpClient, IOptions<FinnhubOptions> optio
         response.EnsureSuccessStatusCode();
 
         var json = await response.Content.ReadAsStringAsync(cancellationToken);
-        using var doc = JsonDocument.Parse(json);
+        var result = JsonSerializer.Deserialize<FinnhubSearchResponse>(json, JsonOptions);
 
-        if (!doc.RootElement.TryGetProperty("result", out var results))
-            return [];
-
-        return results.EnumerateArray()
-            .Select(r => new StockSearchResult(
-                Symbol: r.GetProperty("symbol").GetString() ?? string.Empty,
-                CompanyName: r.GetProperty("description").GetString() ?? string.Empty,
-                Exchange: r.TryGetProperty("displaySymbol", out _) ? "N/A" : "N/A",
-                Currency: "USD"))
+        return result?.Result
             .Where(r => !string.IsNullOrEmpty(r.Symbol))
-            .ToList();
+            .Select(r => new StockSearchResult(
+                Symbol: r.Symbol,
+                CompanyName: r.Description,
+                Exchange: "N/A",
+                Currency: "USD"))
+            .ToList() ?? [];
     }
 
     public async Task<StockQuote?> GetQuoteAsync(
@@ -57,26 +54,42 @@ public class FinnhubClient(HttpClient httpClient, IOptions<FinnhubOptions> optio
         var quoteJson = await quoteResponse.Content.ReadAsStringAsync(cancellationToken);
         var profileJson = await profileResponse.Content.ReadAsStringAsync(cancellationToken);
 
-        using var quoteDoc = JsonDocument.Parse(quoteJson);
-        using var profileDoc = JsonDocument.Parse(profileJson);
+        var q = JsonSerializer.Deserialize<FinnhubQuote>(quoteJson, JsonOptions);
+        var p = JsonSerializer.Deserialize<FinnhubProfile>(profileJson, JsonOptions);
 
-        var q = quoteDoc.RootElement;
-        var p = profileDoc.RootElement;
-
-        if (!q.TryGetProperty("c", out var currentPriceProp) || currentPriceProp.GetDecimal() == 0)
-            return null;
+        if (q is null || q.C == 0) return null;
 
         return new StockQuote(
             Symbol: symbol.ToUpperInvariant(),
-            CompanyName: p.TryGetProperty("name", out var name) ? name.GetString() ?? symbol : symbol,
-            Exchange: p.TryGetProperty("exchange", out var ex) ? ex.GetString() ?? "N/A" : "N/A",
-            Currency: p.TryGetProperty("currency", out var curr) ? curr.GetString() ?? "USD" : "USD",
-            CurrentPrice: currentPriceProp.GetDecimal(),
-            PriceChange: q.TryGetProperty("d", out var d) ? d.GetDecimal() : 0,
-            PriceChangePercent: q.TryGetProperty("dp", out var dp) ? dp.GetDecimal() : 0,
-            MarketCap: p.TryGetProperty("marketCapitalization", out var mc) ? mc.GetDecimal() : 0,
-            High52Week: q.TryGetProperty("h", out var h52) ? h52.GetDecimal() : 0,
-            Low52Week: q.TryGetProperty("l", out var l52) ? l52.GetDecimal() : 0,
+            CompanyName: p?.Name ?? symbol,
+            Exchange: p?.Exchange ?? "N/A",
+            Currency: p?.Currency ?? "USD",
+            CurrentPrice: q.C,
+            PriceChange: q.D,
+            PriceChangePercent: q.Dp,
+            MarketCap: p?.MarketCapitalization ?? 0,
+            High52Week: q.H,
+            Low52Week: q.L,
             DataTimestamp: DateTimeOffset.UtcNow);
     }
+
+    private sealed record FinnhubSearchResponse(
+        [property: JsonPropertyName("result")] List<FinnhubSearchItem> Result);
+
+    private sealed record FinnhubSearchItem(
+        [property: JsonPropertyName("symbol")] string Symbol,
+        [property: JsonPropertyName("description")] string Description);
+
+    private sealed record FinnhubQuote(
+        [property: JsonPropertyName("c")] decimal C,
+        [property: JsonPropertyName("d")] decimal D,
+        [property: JsonPropertyName("dp")] decimal Dp,
+        [property: JsonPropertyName("h")] decimal H,
+        [property: JsonPropertyName("l")] decimal L);
+
+    private sealed record FinnhubProfile(
+        [property: JsonPropertyName("name")] string? Name,
+        [property: JsonPropertyName("exchange")] string? Exchange,
+        [property: JsonPropertyName("currency")] string? Currency,
+        [property: JsonPropertyName("marketCapitalization")] decimal MarketCapitalization);
 }

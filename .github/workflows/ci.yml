@@ -32,7 +32,7 @@ jobs:
         run: npm ci
 
       - name: Build
-        run: npm run build -- --optimization.fonts.inline=false
+        run: npm run build -- --configuration ci
 
       - name: Lint (TypeScript type-check)
         run: npx tsc --noEmit

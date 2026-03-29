@@ -1,0 +1,71 @@
+# ============================================================
+# Stock Tracker — .gitignore
+# Covers: .NET 10 API + Angular 21 client + Azure Cosmos DB
+# ============================================================
+
+# ---- Secrets / Configuration ----
+**/appsettings.Development.json
+**/appsettings.*.json
+!**/appsettings.json
+**/*.Development.json
+.env
+.env.*
+!.env.example
+
+# ---- .NET / C# ----
+**/bin/
+**/obj/
+*.user
+*.suo
+*.userosscache
+*.sln.docstates
+.vs/
+*.DotSettings.user
+**/TestResults/
+*.coverage
+*.coveragexml
+*.trx
+packages/
+project.lock.json
+project.fragment.lock.json
+artifacts/
+
+# ---- Angular / Node.js ----
+**/node_modules/
+**/dist/
+**/.angular/
+**/coverage/
+*.log
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+.pnp.*
+.yarn/
+
+# ---- Jest ----
+jest-coverage/
+
+# ---- OS ----
+.DS_Store
+.DS_Store?
+._*
+.Spotlight-V100
+.Trashes
+ehthumbs.db
+Thumbs.db
+Desktop.ini
+
+# ---- IDE ----
+.idea/
+.vscode/
+*.swp
+*.swo
+*~
+
+# ---- Docker ----
+# (Cosmos emulator runs via docker run, no Dockerfile committed)
+
+# ---- Misc ----
+*.tmp
+*.bak
+*.orig

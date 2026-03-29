@@ -1,0 +1,46 @@
+@use '@angular/material' as mat;
+
+html {
+  @include mat.theme((
+    color: (
+      theme-type: light,
+      primary: mat.$azure-palette,
+    ),
+    typography: Roboto,
+    density: 0,
+  ));
+}
+
+* {
+  box-sizing: border-box;
+}
+
+html, body {
+  height: 100%;
+  margin: 0;
+  font-family: Roboto, 'Helvetica Neue', sans-serif;
+}
+
+/* P&L colour utilities */
+.pnl-positive {
+  color: #2e7d32;
+}
+
+.pnl-negative {
+  color: #c62828;
+}
+
+.pnl-neutral {
+  color: #546e7a;
+}
+
+/* Snackbar overrides */
+.snack-error {
+  --mdc-snackbar-container-color: #c62828;
+  --mdc-snackbar-supporting-text-color: white;
+}
+
+.snack-success {
+  --mdc-snackbar-container-color: #2e7d32;
+  --mdc-snackbar-supporting-text-color: white;
+}

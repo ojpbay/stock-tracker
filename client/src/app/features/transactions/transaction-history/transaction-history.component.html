@@ -1,0 +1,77 @@
+
+    <div class="history-container">
+      <div class="header">
+        <button mat-button (click)="goBack()">
+          <mat-icon>arrow_back</mat-icon>
+          Back
+        </button>
+        <h1>Transaction History</h1>
+        <button mat-raised-button color="primary" (click)="addTransaction()">
+          <mat-icon>add</mat-icon>
+          Add
+        </button>
+      </div>
+
+      @if (store.loading()) {
+        <div class="loading-container">
+          <mat-spinner diameter="40" />
+        </div>
+      }
+
+      @if (store.error()) {
+        <p class="error-message">{{ store.error() }}</p>
+      }
+
+      @if (!store.loading() && store.allTransactions().length === 0) {
+        <p class="empty-state">No transactions recorded yet.</p>
+      }
+
+      @if (store.allTransactions().length > 0) {
+        <table mat-table [dataSource]="store.allTransactions()" class="full-width">
+          <ng-container matColumnDef="typeIcon">
+            <th mat-header-cell *matHeaderCellDef>Type</th>
+            <td mat-cell *matCellDef="let row">
+              <mat-icon [class]="row.type.toLowerCase()">
+                {{ row.type === 'Buy' ? 'trending_up' : row.type === 'Sell' ? 'trending_down' : 'attach_money' }}
+              </mat-icon>
+              {{ row.type }}
+            </td>
+          </ng-container>
+
+          <ng-container matColumnDef="date">
+            <th mat-header-cell *matHeaderCellDef>Date</th>
+            <td mat-cell *matCellDef="let row">{{ row.transactionDate }}</td>
+          </ng-container>
+
+          <ng-container matColumnDef="units">
+            <th mat-header-cell *matHeaderCellDef>Units</th>
+            <td mat-cell *matCellDef="let row">
+              {{ row.units !== null ? (row.units | number: '1.0-4') : '—' }}
+            </td>
+          </ng-container>
+
+          <ng-container matColumnDef="price">
+            <th mat-header-cell *matHeaderCellDef>Price</th>
+            <td mat-cell *matCellDef="let row">
+              {{ row.pricePerUnit !== null ? (row.pricePerUnit | number: '1.2-2') : '—' }}
+            </td>
+          </ng-container>
+
+          <ng-container matColumnDef="amount">
+            <th mat-header-cell *matHeaderCellDef>Amount</th>
+            <td mat-cell *matCellDef="let row">
+              @if (row.dividendAmount !== null) {
+                <span class="dividend">+{{ row.dividendAmount | number: '1.2-2' }}</span>
+              } @else if (row.units !== null && row.pricePerUnit !== null) {
+                {{ row.units * row.pricePerUnit | number: '1.2-2' }}
+              } @else {
+                —
+              }
+            </td>
+          </ng-container>
+
+          <tr mat-header-row *matHeaderRowDef="columns"></tr>
+          <tr mat-row *matRowDef="let row; columns: columns;"></tr>
+        </table>
+      }
+    </div>

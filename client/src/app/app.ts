@@ -23,7 +23,7 @@ import { MatButtonModule } from '@angular/material/button';
     <mat-sidenav-container class="sidenav-container">
       <mat-sidenav #sidenav mode="side" [opened]="true" class="sidenav">
         <mat-nav-list>
-          <a mat-list-item routerLink="/stocks/search" routerLinkActive="active-link">
+          <a mat-list-item routerLink="/stocks" routerLinkActive="active-link">
             <mat-icon matListItemIcon>search</mat-icon>
             <span matListItemTitle>Stock Search</span>
           </a>

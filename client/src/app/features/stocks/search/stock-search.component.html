@@ -1,16 +1,20 @@
 
     <div class="search-container">
-      <h1>Stock Search</h1>
+      <div class="search-header">
+        <p class="page-eyebrow">Market Data</p>
+        <h1 class="page-title">Stock Search</h1>
+        <p class="page-subtitle">Search 10,000+ equities by name or ticker symbol</p>
+      </div>
 
       <mat-form-field appearance="outline" class="search-field">
-        <mat-label>Search by company name or ticker symbol</mat-label>
-        <input matInput [formControl]="searchControl" placeholder="e.g. Apple or AAPL" />
+        <mat-label>Company name or ticker symbol</mat-label>
+        <input matInput [formControl]="searchControl" placeholder="e.g. Apple or AAPL" autocomplete="off" />
         <mat-icon matSuffix>search</mat-icon>
       </mat-form-field>
 
       @if (store.loading()) {
         <div class="loading-container">
-          <mat-spinner diameter="40" />
+          <mat-spinner diameter="36" />
         </div>
       }
 
@@ -19,13 +23,17 @@
       }
 
       @if (store.hasResults() && !store.loading()) {
-        <mat-nav-list>
+        <p class="results-label">{{ store.results().length }} result{{ store.results().length !== 1 ? 's' : '' }}</p>
+        <mat-nav-list class="results-list">
           @for (result of store.results(); track result.symbol) {
-            <mat-list-item [lines]="2" (click)="navigateToDetail(result.symbol)">
-              <span matListItemTitle>{{ result.symbol }}</span>
-              <span matListItemLine>{{ result.companyName }} &bull; {{ result.exchange }}</span>
+            <mat-list-item class="result-item" [lines]="2" (click)="navigateToDetail(result.symbol)">
+              <span matListItemTitle>
+                <span class="symbol-badge">{{ result.symbol }}</span>
+                {{ result.companyName }}
+              </span>
+              <span matListItemLine>{{ result.exchange }}</span>
               <div matListItemMeta>
-                <mat-icon fontIcon="chevron_right"></mat-icon>
+                <mat-icon class="chevron-icon" fontIcon="chevron_right"></mat-icon>
               </div>
             </mat-list-item>
           }

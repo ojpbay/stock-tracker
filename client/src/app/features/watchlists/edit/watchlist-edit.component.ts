@@ -14,11 +14,16 @@ import { WatchlistsService } from '../services/watchlists.service';
   standalone: true,
   imports: [MatButtonModule, MatDialogModule],
   template: `
-    <h2 mat-dialog-title>Confirm Delete</h2>
-    <mat-dialog-content>{{ data.message }}</mat-dialog-content>
-    <mat-dialog-actions align="end">
-      <button mat-button mat-dialog-close>Cancel</button>
-      <button mat-raised-button color="warn" [mat-dialog-close]="true" cdkFocusInitial>Delete</button>
+    <div style="padding: 8px 4px 0">
+      <h2 mat-dialog-title style="font-family: Inter, sans-serif; font-weight: 700; color: var(--text-primary); font-size: 1.1rem; letter-spacing: -0.01em;">Confirm Delete</h2>
+    </div>
+    <mat-dialog-content style="color: var(--text-secondary); font-size: 0.9rem; line-height: 1.6; padding-top: 8px;">{{ data.message }}</mat-dialog-content>
+    <mat-dialog-actions align="end" style="padding: 12px 24px 20px; gap: 8px;">
+      <button mat-button mat-dialog-close style="color: var(--text-secondary); font-family: Inter, sans-serif;">Cancel</button>
+      <button mat-raised-button [mat-dialog-close]="true" cdkFocusInitial
+        style="background: var(--negative) !important; color: #fff !important; font-family: Inter, sans-serif; font-weight: 600; border-radius: 8px;">
+        Delete
+      </button>
     </mat-dialog-actions>
   `,
 
@@ -43,12 +48,82 @@ export class ConfirmDialogComponent {
   styles: [`
     .edit-container {
       max-width: 560px;
-      margin: 1rem auto;
-      padding: 0 1rem;
+      margin: 0 auto;
     }
-    .full-width { width: 100%; margin-bottom: 1rem; }
-    .form-actions { display: flex; gap: 1rem; margin-top: 1rem; }
-    .error-message { color: var(--mat-sys-error); }
+
+    .back-btn {
+      color: var(--text-secondary) !important;
+      font-size: 0.8rem !important;
+      margin-bottom: 1.5rem;
+    }
+
+    .page-eyebrow {
+      font-size: 0.65rem;
+      font-weight: 700;
+      letter-spacing: 0.15em;
+      text-transform: uppercase;
+      color: var(--accent);
+      margin-bottom: 4px;
+    }
+
+    .page-title {
+      font-size: 1.5rem;
+      font-weight: 700;
+      color: var(--text-primary);
+      letter-spacing: -0.03em;
+      margin-bottom: 1.75rem;
+    }
+
+    .form-card {
+      background: var(--bg-card);
+      border: 1px solid var(--border-subtle);
+      border-radius: var(--radius-xl);
+      padding: 28px;
+    }
+
+    .full-width {
+      width: 100%;
+      margin-bottom: 0.5rem;
+    }
+
+    .form-actions {
+      display: flex;
+      gap: 10px;
+      margin-top: 1.25rem;
+      align-items: center;
+    }
+
+    .save-btn {
+      background: linear-gradient(135deg, var(--accent), #0099CC) !important;
+      color: #000 !important;
+      font-weight: 700 !important;
+      letter-spacing: 0.02em !important;
+      border-radius: var(--radius-md) !important;
+      box-shadow: 0 0 16px var(--accent-glow) !important;
+      height: 42px !important;
+      padding: 0 24px !important;
+    }
+
+    .delete-btn {
+      color: var(--negative) !important;
+      border-color: var(--negative-border) !important;
+      border-radius: var(--radius-md) !important;
+      height: 42px !important;
+    }
+
+    .delete-btn:hover {
+      background: var(--negative-dim) !important;
+    }
+
+    .error-message {
+      color: var(--negative);
+      background: var(--negative-dim);
+      border: 1px solid var(--negative-border);
+      border-radius: var(--radius-md);
+      padding: 10px 14px;
+      font-size: 0.875rem;
+      margin-top: 1rem;
+    }
   `],
 })
 export class WatchlistEditComponent implements OnInit {

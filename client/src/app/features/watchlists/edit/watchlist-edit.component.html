@@ -1,42 +1,45 @@
 
     <div class="edit-container">
-      <button mat-button (click)="goBack()">
+      <button mat-button class="back-btn" (click)="goBack()">
         <mat-icon>arrow_back</mat-icon>
         Back
       </button>
 
-      <h1>{{ isNew ? 'New Watchlist' : 'Edit Watchlist' }}</h1>
+      <p class="page-eyebrow">{{ isNew ? 'Create' : 'Manage' }}</p>
+      <h1 class="page-title">{{ isNew ? 'New Watchlist' : 'Edit Watchlist' }}</h1>
 
-      <form [formGroup]="form" (ngSubmit)="onSubmit()">
-        <mat-form-field appearance="outline" class="full-width">
-          <mat-label>Name</mat-label>
-          <input matInput formControlName="name" placeholder="e.g. Tech Stocks" />
-          @if (form.get('name')?.hasError('required')) {
-            <mat-error>Name is required</mat-error>
-          }
-          @if (form.get('name')?.hasError('maxlength')) {
-            <mat-error>Name must not exceed 100 characters</mat-error>
-          }
-        </mat-form-field>
+      <div class="form-card">
+        <form [formGroup]="form" (ngSubmit)="onSubmit()">
+          <mat-form-field appearance="outline" class="full-width">
+            <mat-label>Watchlist name</mat-label>
+            <input matInput formControlName="name" placeholder="e.g. Tech Stocks" />
+            @if (form.get('name')?.hasError('required')) {
+              <mat-error>Name is required</mat-error>
+            }
+            @if (form.get('name')?.hasError('maxlength')) {
+              <mat-error>Name must not exceed 100 characters</mat-error>
+            }
+          </mat-form-field>
 
-        <mat-form-field appearance="outline" class="full-width">
-          <mat-label>Description</mat-label>
-          <textarea matInput formControlName="description" rows="3" placeholder="Optional description"></textarea>
-        </mat-form-field>
+          <mat-form-field appearance="outline" class="full-width">
+            <mat-label>Description (optional)</mat-label>
+            <textarea matInput formControlName="description" rows="3" placeholder="A short description of this watchlist"></textarea>
+          </mat-form-field>
 
-        <div class="form-actions">
-          <button mat-raised-button color="primary" type="submit" [disabled]="form.invalid || store.loading()">
-            {{ isNew ? 'Create' : 'Save' }}
-          </button>
-
-          @if (!isNew) {
-            <button mat-stroked-button color="warn" type="button" (click)="confirmDelete()">
-              <mat-icon>delete</mat-icon>
-              Delete
+          <div class="form-actions">
+            <button mat-raised-button class="save-btn" type="submit" [disabled]="form.invalid || store.loading()">
+              {{ isNew ? 'Create Watchlist' : 'Save Changes' }}
             </button>
-          }
-        </div>
-      </form>
+
+            @if (!isNew) {
+              <button mat-stroked-button class="delete-btn" type="button" (click)="confirmDelete()">
+                <mat-icon>delete_outline</mat-icon>
+                Delete
+              </button>
+            }
+          </div>
+        </form>
+      </div>
 
       @if (store.error()) {
         <p class="error-message">{{ store.error() }}</p>

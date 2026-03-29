@@ -17,10 +17,10 @@ describe('App', () => {
     expect(app).toBeTruthy();
   });
 
-  it('should render the app title in the toolbar', () => {
+  it('should render the brand name in the sidenav', () => {
     const fixture = TestBed.createComponent(App);
     fixture.detectChanges();
     const compiled = fixture.nativeElement as HTMLElement;
-    expect(compiled.querySelector('.app-title')?.textContent).toContain('Stock Tracker');
+    expect(compiled.querySelector('.brand-name')?.textContent).toContain('StockTracker');
   });
 });

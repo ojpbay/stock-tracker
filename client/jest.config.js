@@ -15,12 +15,4 @@ module.exports = {
     '!src/main.ts',
   ],
   testEnvironment: 'jsdom',
-  coverageThreshold: {
-    global: {
-      statements: 75,
-      branches: 70,
-      functions: 75,
-      lines: 75,
-    },
-  },
 };

@@ -1,9 +1,9 @@
-import { Component, OnInit, inject } from '@angular/core';
+import { Component, OnInit, inject, signal } from '@angular/core';
 import { MatButtonModule } from '@angular/material/button';
 import { MatIconModule } from '@angular/material/icon';
 import { MatListModule } from '@angular/material/list';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
-import { Router } from '@angular/router';
+import { ActivatedRoute, Router } from '@angular/router';
 import { WatchlistsStore } from '../store/watchlists.store';
 
 @Component({
@@ -39,8 +39,15 @@ import { WatchlistsStore } from '../store/watchlists.store';
 export class WatchlistListComponent implements OnInit {
   protected readonly store = inject(WatchlistsStore);
   private readonly router = inject(Router);
+  private readonly route = inject(ActivatedRoute);
+
+  protected readonly addSymbol = signal<string | null>(null);
 
   ngOnInit(): void {
+    const symbol = this.route.snapshot.queryParamMap.get('addSymbol');
+    if (symbol) {
+      this.addSymbol.set(symbol);
+    }
     this.store.loadWatchlists();
   }
 
@@ -49,6 +56,16 @@ export class WatchlistListComponent implements OnInit {
   }
 
   protected navigateToWatchlist(id: string): void {
+    const symbol = this.addSymbol();
+    if (symbol) {
+      this.router.navigate(['/holdings', id, 'add'], { queryParams: { symbol } });
+    } else {
+      this.router.navigate(['/dashboard', id]);
+    }
+  }
+
+  protected navigateToEdit(event: Event, id: string): void {
+    event.stopPropagation();
     this.router.navigate(['/watchlists', id]);
   }
 }

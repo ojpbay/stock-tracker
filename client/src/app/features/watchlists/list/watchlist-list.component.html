@@ -1,7 +1,11 @@
 
     <div class="list-container">
       <div class="list-header">
-        <h1>My Watchlists</h1>
+        @if (addSymbol()) {
+          <h1>Add {{ addSymbol() }} to...</h1>
+        } @else {
+          <h1>My Watchlists</h1>
+        }
         <button mat-raised-button color="primary" (click)="createNew()">
           <mat-icon>add</mat-icon>
           New Watchlist
@@ -33,8 +37,11 @@
               }
 
               <div matListItemMeta>
+                <button mat-icon-button (click)="navigateToEdit($event, watchlist.id)" aria-label="Edit watchlist">
+                  <mat-icon fontIcon="edit"></mat-icon>
+                </button>
                 <mat-icon fontIcon="chevron_right"></mat-icon>
-              </div>              
+              </div>
             </mat-list-item>
           }
         </mat-nav-list>

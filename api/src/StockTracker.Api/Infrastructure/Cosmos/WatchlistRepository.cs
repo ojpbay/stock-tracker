@@ -50,13 +50,13 @@ public class WatchlistRepository(CosmosClient cosmosClient, IOptions<CosmosDbOpt
 
     public async Task<Watchlist> CreateAsync(Watchlist watchlist, CancellationToken cancellationToken = default)
     {
-        var response = await Container.CreateItemAsync(watchlist, new PartitionKey(watchlist.Id), cancellationToken: cancellationToken);
+        var response = await Container.CreateItemAsync(watchlist, new PartitionKey(watchlist.Id), cancellationToken: CancellationToken.None);
         return response.Resource;
     }
 
     public async Task<Watchlist> UpdateAsync(Watchlist watchlist, CancellationToken cancellationToken = default)
     {
-        var response = await Container.ReplaceItemAsync(watchlist, watchlist.Id, new PartitionKey(watchlist.Id), cancellationToken: cancellationToken);
+        var response = await Container.ReplaceItemAsync(watchlist, watchlist.Id, new PartitionKey(watchlist.Id), cancellationToken: CancellationToken.None);
         return response.Resource;
     }
 

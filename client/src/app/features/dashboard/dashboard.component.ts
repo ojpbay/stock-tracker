@@ -1,4 +1,4 @@
-import { Component, OnInit, inject } from '@angular/core';
+import { Component, OnInit, inject, signal } from '@angular/core';
 import { ActivatedRoute, Router, RouterLink } from '@angular/router';
 import { MatTableModule } from '@angular/material/table';
 import { MatCardModule } from '@angular/material/card';
@@ -33,59 +33,222 @@ const COLUMNS = ['symbol', 'units', 'avgPrice', 'currentPrice', 'currentValue', 
   templateUrl: './dashboard.component.html',
   styles: [`
     .dashboard-container {
-      max-width: 960px;
-      margin: 1rem auto;
-      padding: 0 1rem;
+      max-width: 1000px;
+      margin: 0 auto;
     }
+
+    /* Header */
     .dashboard-header {
       display: flex;
-      align-items: center;
+      align-items: flex-end;
+      justify-content: space-between;
+      margin-bottom: 2rem;
+      flex-wrap: wrap;
       gap: 1rem;
-      margin-bottom: 1rem;
     }
+
+    .header-left .page-eyebrow {
+      font-size: 0.65rem;
+      font-weight: 700;
+      letter-spacing: 0.15em;
+      text-transform: uppercase;
+      color: var(--accent);
+      margin-bottom: 4px;
+    }
+
+    .header-left h1 {
+      font-size: 1.6rem;
+      font-weight: 700;
+      color: var(--text-primary);
+      letter-spacing: -0.03em;
+    }
+
+    .back-btn {
+      color: var(--text-secondary) !important;
+      font-size: 0.8rem !important;
+    }
+
+    /* Loading */
     .loading-container {
       display: flex;
       justify-content: center;
-      margin: 3rem 0;
+      margin: 4rem 0;
     }
-    .summary-card, .chart-card {
+
+    /* Error */
+    .error-card {
+      background: var(--negative-dim) !important;
+      border: 1px solid var(--negative-border) !important;
+      border-radius: var(--radius-lg) !important;
       margin-bottom: 1rem;
     }
-    .summary-grid {
+
+    /* Summary stats row */
+    .summary-row {
       display: grid;
       grid-template-columns: repeat(3, 1fr);
-      gap: 1rem;
+      gap: 12px;
+      margin-bottom: 1.25rem;
     }
-    .summary-item {
+
+    .stat-card {
+      background: var(--bg-card);
+      border: 1px solid var(--border-subtle);
+      border-radius: var(--radius-lg);
+      padding: 18px 20px;
       display: flex;
       flex-direction: column;
+      gap: 6px;
+      transition: border-color 0.15s ease;
     }
-    .label {
-      font-size: 0.75rem;
-      color: var(--mat-sys-on-surface-variant);
+
+    .stat-card:hover {
+      border-color: var(--border-default);
     }
-    .value {
-      font-size: 1.1rem;
+
+    .stat-card.accent-card {
+      border-color: var(--border-accent);
+      background: linear-gradient(135deg, rgba(0,212,255,0.05) 0%, var(--bg-card) 100%);
+    }
+
+    .stat-label {
+      font-size: 0.65rem;
       font-weight: 600;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      color: var(--text-muted);
     }
-    .full-width { width: 100%; }
+
+    .stat-value {
+      font-size: 1.3rem;
+      font-weight: 700;
+      color: var(--text-primary);
+      letter-spacing: -0.02em;
+      font-variant-numeric: tabular-nums;
+    }
+
+    /* Chart card */
+    .chart-card {
+      background: var(--bg-card);
+      border: 1px solid var(--border-subtle);
+      border-radius: var(--radius-lg);
+      padding: 20px 24px;
+      margin-bottom: 1.25rem;
+    }
+
+    .section-title {
+      font-size: 0.72rem;
+      font-weight: 600;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      color: var(--text-muted);
+      margin-bottom: 16px;
+    }
+
+    /* Holdings table card */
+    .table-card {
+      background: var(--bg-card);
+      border: 1px solid var(--border-subtle);
+      border-radius: var(--radius-lg);
+      overflow: hidden;
+    }
+
+    .table-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 18px 24px 14px;
+      border-bottom: 1px solid var(--border-subtle);
+    }
+
+    .add-holding-btn {
+      background: var(--accent-dim) !important;
+      color: var(--accent) !important;
+      border: 1px solid var(--border-accent) !important;
+      font-weight: 600 !important;
+      font-size: 0.8rem !important;
+      border-radius: var(--radius-md) !important;
+      height: 34px !important;
+    }
+
+    .holdings-table {
+      width: 100%;
+    }
+
+    .symbol-cell strong {
+      font-size: 0.875rem;
+      font-weight: 700;
+      color: var(--text-primary);
+      font-family: 'Inter', monospace;
+    }
+
+    .symbol-cell small {
+      display: block;
+      font-size: 0.72rem;
+      color: var(--text-muted);
+      margin-top: 1px;
+    }
+
+    .num-cell {
+      font-variant-numeric: tabular-nums;
+      font-size: 0.875rem;
+      color: var(--text-secondary);
+    }
+
     .stale-icon {
-      font-size: 1rem;
-      color: orange;
+      font-size: 14px;
+      width: 14px;
+      height: 14px;
+      color: var(--positive);
       vertical-align: middle;
+      margin-left: 3px;
     }
+
     .unavailable {
-      color: var(--mat-sys-on-surface-variant);
+      color: var(--text-muted);
       font-style: italic;
+      font-size: 0.8rem;
     }
+
+    .row-action-btn {
+      color: var(--text-muted) !important;
+      width: 28px !important;
+      height: 28px !important;
+      font-size: 14px !important;
+    }
+
+    .row-action-btn:hover {
+      color: var(--accent) !important;
+    }
+
+    /* Empty state */
     .empty-state {
       text-align: center;
-      color: var(--mat-sys-on-surface-variant);
-      padding: 2rem;
+      padding: 4rem 2rem;
+      background: var(--bg-card);
+      border: 1px solid var(--border-subtle);
+      border-radius: var(--radius-lg);
     }
-    .error-card {
-      background-color: var(--mat-sys-error-container);
+
+    .empty-icon {
+      font-size: 48px;
+      width: 48px;
+      height: 48px;
+      color: var(--text-muted);
       margin-bottom: 1rem;
+    }
+
+    .empty-title {
+      font-size: 1rem;
+      font-weight: 600;
+      color: var(--text-secondary);
+      margin-bottom: 6px;
+    }
+
+    .empty-sub {
+      font-size: 0.82rem;
+      color: var(--text-muted);
+      margin-bottom: 1.5rem;
     }
   `],
 })
@@ -94,11 +257,13 @@ export class DashboardComponent implements OnInit {
   private readonly route = inject(ActivatedRoute);
 
   protected readonly columns = COLUMNS;
+  protected readonly watchlistId = signal('');
 
   ngOnInit(): void {
-    const watchlistId = this.route.snapshot.paramMap.get('watchlistId');
-    if (watchlistId) {
-      this.store.loadDashboard(watchlistId);
+    const id = this.route.snapshot.paramMap.get('watchlistId');
+    if (id) {
+      this.watchlistId.set(id);
+      this.store.loadDashboard(id);
     }
   }
 }

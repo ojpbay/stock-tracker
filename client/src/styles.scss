@@ -1,16 +1,146 @@
 @use '@angular/material' as mat;
 
+/* ─── Finance Dark Theme ─────────────────────────────────────────────────── */
 html {
   @include mat.theme((
     color: (
-      theme-type: light,
-      primary: mat.$azure-palette,
+      theme-type: dark,
+      primary: mat.$cyan-palette,
     ),
-    typography: Roboto,
-    density: 0,
+    typography: system-ui,
+    density: -1,
   ));
 }
 
+/* ─── Design Tokens ──────────────────────────────────────────────────────── */
+:root {
+  /* Backgrounds */
+  --bg-void:       #060A14;
+  --bg-primary:    #0A0E1A;
+  --bg-secondary:  #0D1421;
+  --bg-card:       #101827;
+  --bg-elevated:   #151E30;
+  --bg-hover:      #1A2540;
+  --bg-input:      #0D1421;
+
+  /* Borders */
+  --border-subtle:  rgba(255, 255, 255, 0.06);
+  --border-default: rgba(255, 255, 255, 0.10);
+  --border-strong:  rgba(255, 255, 255, 0.18);
+  --border-accent:  rgba(0, 212, 255, 0.30);
+
+  /* Accent — Electric Blue */
+  --accent:         #00D4FF;
+  --accent-dim:     rgba(0, 212, 255, 0.12);
+  --accent-glow:    rgba(0, 212, 255, 0.25);
+  --accent-strong:  rgba(0, 212, 255, 0.70);
+
+  /* Positive — Gold / Amber */
+  --positive:       #FFB700;
+  --positive-bright:#FFD060;
+  --positive-dim:   rgba(255, 183, 0, 0.12);
+  --positive-border:rgba(255, 183, 0, 0.30);
+
+  /* Negative — Red */
+  --negative:       #F05252;
+  --negative-dim:   rgba(240, 82, 82, 0.12);
+  --negative-border:rgba(240, 82, 82, 0.30);
+
+  /* Text */
+  --text-primary:   #E2E8F0;
+  --text-secondary: #94A3B8;
+  --text-muted:     #4B5880;
+  --text-accent:    #00D4FF;
+
+  /* Shadows */
+  --shadow-card:   0 1px 3px rgba(0,0,0,0.6), 0 1px 2px rgba(0,0,0,0.4);
+  --shadow-elevated: 0 4px 16px rgba(0,0,0,0.5), 0 1px 4px rgba(0,0,0,0.3);
+  --shadow-glow:   0 0 20px rgba(0, 212, 255, 0.15);
+
+  /* Radii */
+  --radius-sm:  6px;
+  --radius-md:  10px;
+  --radius-lg:  14px;
+  --radius-xl:  18px;
+}
+
+/* ─── Override Material surface tokens ───────────────────────────────────── */
+html {
+  --mat-app-background-color:              var(--bg-primary);
+  --mat-app-surface-color:                 var(--bg-card);
+  --mat-app-on-background-color:           var(--text-primary);
+  --mat-app-on-surface-color:              var(--text-primary);
+  --mat-app-on-surface-variant-color:      var(--text-secondary);
+
+  /* Toolbar */
+  --mat-toolbar-container-background-color: var(--bg-void);
+  --mat-toolbar-container-text-color:       var(--text-primary);
+
+  /* Sidenav */
+  --mat-sidenav-container-background-color: var(--bg-void);
+  --mat-sidenav-container-divider-color:    var(--border-subtle);
+  --mat-sidenav-content-background-color:   var(--bg-primary);
+
+  /* Card */
+  --mat-card-container-color:               var(--bg-card);
+  --mat-card-container-shadow:              var(--shadow-card);
+  --mat-card-subtitle-text-color:           var(--text-secondary);
+
+  /* Table */
+  --mat-table-background-color:             transparent;
+  --mat-table-header-headline-color:        var(--text-muted);
+  --mat-table-row-item-label-text-color:    var(--text-primary);
+  --mat-table-row-item-outline-color:       var(--border-subtle);
+
+  /* Form field */
+  --mdc-outlined-text-field-outline-color:          var(--border-default);
+  --mdc-outlined-text-field-focus-outline-color:    var(--accent);
+  --mdc-outlined-text-field-hover-outline-color:    var(--border-strong);
+  --mdc-outlined-text-field-container-color:        var(--bg-input);
+  --mdc-outlined-text-field-input-text-color:       var(--text-primary);
+  --mdc-outlined-text-field-label-text-color:       var(--text-secondary);
+  --mdc-outlined-text-field-focus-label-text-color: var(--accent);
+
+  /* List */
+  --mat-list-active-indicator-color:                var(--accent-dim);
+  --mdc-list-list-item-container-color:             transparent;
+  --mdc-list-list-item-label-text-color:            var(--text-primary);
+  --mdc-list-list-item-supporting-text-color:       var(--text-secondary);
+
+  /* Button */
+  --mdc-filled-button-container-color:              var(--accent);
+  --mdc-filled-button-label-text-color:             #000;
+  --mdc-outlined-button-outline-color:              var(--border-default);
+  --mdc-outlined-button-label-text-color:           var(--text-primary);
+
+  /* Divider */
+  --mat-divider-color:                              var(--border-subtle);
+
+  /* Progress spinner */
+  --mdc-circular-progress-active-indicator-color:   var(--accent);
+
+  /* Snackbar */
+  --mdc-snackbar-container-color:                   var(--bg-elevated);
+  --mdc-snackbar-supporting-text-color:             var(--text-primary);
+
+  /* Dialog */
+  --mdc-dialog-container-color:                     var(--bg-elevated);
+
+  /* Chips */
+  --mat-chip-flat-selected-container-color:         var(--accent-dim);
+
+  /* Button toggle */
+  --mat-button-toggle-selected-state-background-color: var(--accent-dim);
+  --mat-button-toggle-selected-state-text-color:       var(--accent);
+  --mat-button-toggle-text-color:                      var(--text-secondary);
+  --mat-button-toggle-background-color:                var(--bg-elevated);
+  --mat-button-toggle-divider-color:                   var(--border-default);
+
+  /* Datepicker */
+  --mat-datepicker-calendar-container-background-color: var(--bg-elevated);
+}
+
+/* ─── Base Reset ─────────────────────────────────────────────────────────── */
 * {
   box-sizing: border-box;
 }
@@ -18,29 +148,204 @@ html {
 html, body {
   height: 100%;
   margin: 0;
-  font-family: Roboto, 'Helvetica Neue', sans-serif;
+  font-family: 'Inter', system-ui, -apple-system, sans-serif;
+  background-color: var(--bg-primary);
+  color: var(--text-primary);
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
 }
 
-/* P&L colour utilities */
+/* ─── Scrollbar Styling ──────────────────────────────────────────────────── */
+::-webkit-scrollbar {
+  width: 6px;
+  height: 6px;
+}
+::-webkit-scrollbar-track {
+  background: var(--bg-void);
+}
+::-webkit-scrollbar-thumb {
+  background: var(--border-strong);
+  border-radius: 3px;
+}
+::-webkit-scrollbar-thumb:hover {
+  background: var(--text-muted);
+}
+
+/* ─── Typography Utilities ───────────────────────────────────────────────── */
+h1, h2, h3, h4, h5, h6 {
+  font-family: 'Inter', system-ui, sans-serif;
+  font-weight: 600;
+  color: var(--text-primary);
+  margin: 0;
+  letter-spacing: -0.02em;
+}
+
+/* ─── P&L Colour Utilities ───────────────────────────────────────────────── */
 .pnl-positive {
-  color: #2e7d32;
+  color: var(--positive);
 }
-
 .pnl-negative {
-  color: #c62828;
+  color: var(--negative);
 }
-
 .pnl-neutral {
-  color: #546e7a;
+  color: var(--text-secondary);
 }
 
-/* Snackbar overrides */
+/* ─── Finance Card Mixin ─────────────────────────────────────────────────── */
+.finance-card {
+  background: var(--bg-card);
+  border: 1px solid var(--border-subtle);
+  border-radius: var(--radius-lg);
+  box-shadow: var(--shadow-card);
+  transition: border-color 0.2s ease, box-shadow 0.2s ease;
+
+  &:hover {
+    border-color: var(--border-default);
+  }
+}
+
+.finance-card-glow {
+  background: var(--bg-card);
+  border: 1px solid var(--border-accent);
+  border-radius: var(--radius-lg);
+  box-shadow: var(--shadow-card), var(--shadow-glow);
+}
+
+/* ─── Stat Label/Value Pair ──────────────────────────────────────────────── */
+.stat-label {
+  font-size: 0.7rem;
+  font-weight: 500;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--text-muted);
+}
+
+.stat-value {
+  font-size: 1.05rem;
+  font-weight: 600;
+  color: var(--text-primary);
+  letter-spacing: -0.01em;
+}
+
+/* ─── Snackbar Overrides ─────────────────────────────────────────────────── */
 .snack-error {
-  --mdc-snackbar-container-color: #c62828;
-  --mdc-snackbar-supporting-text-color: white;
+  --mdc-snackbar-container-color: rgba(240, 82, 82, 0.15);
+  --mdc-snackbar-supporting-text-color: var(--negative);
+  border: 1px solid var(--negative-border) !important;
 }
 
 .snack-success {
-  --mdc-snackbar-container-color: #2e7d32;
-  --mdc-snackbar-supporting-text-color: white;
+  --mdc-snackbar-container-color: rgba(0, 212, 255, 0.10);
+  --mdc-snackbar-supporting-text-color: var(--accent);
+  border: 1px solid var(--border-accent) !important;
+}
+
+/* ─── Material Component Overrides ──────────────────────────────────────── */
+
+/* Cards */
+mat-card, .mat-mdc-card {
+  background: var(--bg-card) !important;
+  border: 1px solid var(--border-subtle) !important;
+  border-radius: var(--radius-lg) !important;
+  box-shadow: var(--shadow-card) !important;
+}
+
+/* Table rows */
+.mat-mdc-row:hover {
+  background: var(--bg-hover) !important;
+  transition: background 0.15s ease;
+}
+
+.mat-mdc-header-row {
+  background: transparent !important;
+}
+
+.mat-mdc-header-cell {
+  color: var(--text-muted) !important;
+  font-size: 0.7rem !important;
+  font-weight: 600 !important;
+  letter-spacing: 0.08em !important;
+  text-transform: uppercase !important;
+  border-bottom: 1px solid var(--border-subtle) !important;
+}
+
+.mat-mdc-cell {
+  border-bottom: 1px solid var(--border-subtle) !important;
+  font-size: 0.875rem !important;
+}
+
+/* Nav list items */
+.mat-mdc-list-item {
+  border-radius: var(--radius-md) !important;
+  margin: 2px 8px !important;
+  transition: background 0.15s ease !important;
+}
+
+.mat-mdc-list-item:hover {
+  background: var(--bg-hover) !important;
+}
+
+/* Buttons */
+.mat-mdc-raised-button.mat-primary {
+  background: linear-gradient(135deg, var(--accent), #0099CC) !important;
+  color: #000 !important;
+  font-weight: 600 !important;
+  letter-spacing: 0.02em !important;
+  box-shadow: 0 0 16px var(--accent-glow) !important;
+}
+
+.mat-mdc-raised-button.mat-primary:hover {
+  box-shadow: 0 0 24px var(--accent-glow), 0 4px 12px rgba(0,0,0,0.4) !important;
+}
+
+/* Form fields */
+.mat-mdc-form-field {
+  .mat-mdc-text-field-wrapper {
+    background: var(--bg-input) !important;
+  }
+}
+
+/* Progress spinner */
+.mat-mdc-progress-spinner circle {
+  stroke: var(--accent) !important;
+}
+
+/* Dialog */
+.mat-mdc-dialog-container .mdc-dialog__surface {
+  background: var(--bg-elevated) !important;
+  border: 1px solid var(--border-default) !important;
+  border-radius: var(--radius-lg) !important;
+}
+
+/* Chips */
+.mat-mdc-standard-chip {
+  background: var(--bg-elevated) !important;
+  border: 1px solid var(--border-default) !important;
+  color: var(--text-secondary) !important;
+}
+
+/* Button toggles */
+.mat-button-toggle-group {
+  border: 1px solid var(--border-default) !important;
+  border-radius: var(--radius-md) !important;
+  overflow: hidden;
+  background: var(--bg-elevated) !important;
+}
+
+.mat-button-toggle {
+  background: transparent !important;
+  border-right: 1px solid var(--border-default) !important;
+  font-family: 'Inter', sans-serif !important;
+  font-size: 0.875rem !important;
+  font-weight: 500 !important;
+}
+
+.mat-button-toggle-checked {
+  background: var(--accent-dim) !important;
+  color: var(--accent) !important;
+}
+
+/* Divider */
+.mat-divider {
+  border-color: var(--border-subtle) !important;
 }

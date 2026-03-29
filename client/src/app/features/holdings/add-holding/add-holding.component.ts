@@ -25,12 +25,78 @@ import { NotificationService } from '../../../core/services/notification.service
   templateUrl: './add-holding.component.html',
   styles: [`
     .add-container {
-      max-width: 480px;
-      margin: 1rem auto;
-      padding: 0 1rem;
+      max-width: 520px;
+      margin: 0 auto;
     }
-    .full-width { width: 100%; margin-bottom: 1rem; }
-    .form-actions { margin-top: 1rem; }
+
+    .back-btn {
+      color: var(--text-secondary) !important;
+      font-size: 0.8rem !important;
+      margin-bottom: 1.5rem;
+    }
+
+    .page-eyebrow {
+      font-size: 0.65rem;
+      font-weight: 700;
+      letter-spacing: 0.15em;
+      text-transform: uppercase;
+      color: var(--accent);
+      margin-bottom: 4px;
+    }
+
+    .page-title {
+      font-size: 1.5rem;
+      font-weight: 700;
+      color: var(--text-primary);
+      letter-spacing: -0.03em;
+      margin-bottom: 4px;
+    }
+
+    .page-sub {
+      font-size: 0.875rem;
+      color: var(--text-secondary);
+      margin-bottom: 1.75rem;
+    }
+
+    .symbol-tag {
+      display: inline-block;
+      background: var(--accent-dim);
+      border: 1px solid var(--border-accent);
+      color: var(--accent);
+      font-weight: 700;
+      font-size: 0.8rem;
+      letter-spacing: 0.04em;
+      padding: 2px 10px;
+      border-radius: 4px;
+      font-family: 'Inter', monospace;
+    }
+
+    .form-card {
+      background: var(--bg-card);
+      border: 1px solid var(--border-subtle);
+      border-radius: var(--radius-xl);
+      padding: 28px;
+    }
+
+    .full-width {
+      width: 100%;
+      margin-bottom: 0.5rem;
+    }
+
+    .form-actions {
+      margin-top: 1.25rem;
+    }
+
+    .submit-btn {
+      background: linear-gradient(135deg, var(--accent), #0099CC) !important;
+      color: #000 !important;
+      font-weight: 700 !important;
+      letter-spacing: 0.02em !important;
+      border-radius: var(--radius-md) !important;
+      box-shadow: 0 0 16px var(--accent-glow) !important;
+      height: 42px !important;
+      padding: 0 28px !important;
+    }
   `],
 })
 export class AddHoldingComponent implements OnInit {

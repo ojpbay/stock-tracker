@@ -12,11 +12,15 @@ import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
       flex-direction: column;
       align-items: center;
       justify-content: center;
-      padding: 24px;
-      gap: 16px;
+      padding: 32px;
+      gap: 14px;
     }
     .spinner-message {
-      color: rgba(0, 0, 0, 0.54);
+      font-family: 'Inter', sans-serif;
+      font-size: 0.8rem;
+      font-weight: 500;
+      color: var(--text-muted);
+      letter-spacing: 0.04em;
       margin: 0;
     }
   `]

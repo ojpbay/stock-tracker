@@ -78,8 +78,8 @@ jobs:
 
       - name: Test (unit tests)
         run: >
-          dotnet test --no-build --configuration Release
-          --filter "Category!=Integration"
+          dotnet test tests/StockTracker.UnitTests/StockTracker.UnitTests.csproj
+          --no-build --configuration Release
           --logger "trx;LogFileName=test-results.trx"
           --collect "XPlat Code Coverage"
 

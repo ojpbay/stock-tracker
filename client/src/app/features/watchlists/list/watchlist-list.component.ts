@@ -1,9 +1,9 @@
 import { Component, OnInit, inject } from '@angular/core';
-import { Router } from '@angular/router';
-import { MatListModule } from '@angular/material/list';
 import { MatButtonModule } from '@angular/material/button';
 import { MatIconModule } from '@angular/material/icon';
+import { MatListModule } from '@angular/material/list';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
+import { Router } from '@angular/router';
 import { WatchlistsStore } from '../store/watchlists.store';
 
 @Component({

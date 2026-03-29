@@ -25,15 +25,16 @@
       @if (!store.isEmpty()) {
         <mat-nav-list>
           @for (watchlist of store.watchlists(); track watchlist.id) {
-            <mat-list-item lines="2" (click)="navigateToWatchlist(watchlist.id)">
+            <mat-list-item [lines]="watchlist.description ? 3 : 2" (click)="navigateToWatchlist(watchlist.id)">
               <span matListItemTitle>{{ watchlist.name }}</span>
-              <span matListItemLine>
-                {{ watchlist.holdingCount }} holding{{ watchlist.holdingCount !== 1 ? 's' : '' }}
-                @if (watchlist.description) {
-                  &bull; {{ watchlist.description }}
-                }
-              </span>
-              <mat-icon matListItemMeta>chevron_right</mat-icon>
+              <span matListItemLine>{{ watchlist.holdingCount }} holding{{ watchlist.holdingCount !== 1 ? 's' : '' }}</span>
+              @if (watchlist.description) {
+                <span matListItemLine>{{ watchlist.description }}</span>
+              }
+
+              <div matListItemMeta>
+                <mat-icon fontIcon="chevron_right"></mat-icon>
+              </div>              
             </mat-list-item>
           }
         </mat-nav-list>

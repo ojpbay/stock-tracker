@@ -1,0 +1,49 @@
+
+    <div class="list-container">
+      <div class="list-header">
+        @if (addSymbol()) {
+          <h1>Add {{ addSymbol() }} to...</h1>
+        } @else {
+          <h1>My Watchlists</h1>
+        }
+        <button mat-raised-button color="primary" (click)="createNew()">
+          <mat-icon>add</mat-icon>
+          New Watchlist
+        </button>
+      </div>
+
+      @if (store.loading()) {
+        <div class="loading-container">
+          <mat-spinner diameter="40" />
+        </div>
+      }
+
+      @if (store.error()) {
+        <p class="error-message">{{ store.error() }}</p>
+      }
+
+      @if (store.isEmpty() && !store.loading()) {
+        <p class="empty-state">No watchlists yet. Create one to get started.</p>
+      }
+
+      @if (!store.isEmpty()) {
+        <mat-nav-list>
+          @for (watchlist of store.watchlists(); track watchlist.id) {
+            <mat-list-item [lines]="watchlist.description ? 3 : 2" (click)="navigateToWatchlist(watchlist.id)">
+              <span matListItemTitle>{{ watchlist.name }}</span>
+              <span matListItemLine>{{ watchlist.holdingCount }} holding{{ watchlist.holdingCount !== 1 ? 's' : '' }}</span>
+              @if (watchlist.description) {
+                <span matListItemLine>{{ watchlist.description }}</span>
+              }
+
+              <div matListItemMeta>
+                <button mat-icon-button (click)="navigateToEdit($event, watchlist.id)" aria-label="Edit watchlist">
+                  <mat-icon fontIcon="edit"></mat-icon>
+                </button>
+                <mat-icon fontIcon="chevron_right"></mat-icon>
+              </div>
+            </mat-list-item>
+          }
+        </mat-nav-list>
+      }
+    </div>

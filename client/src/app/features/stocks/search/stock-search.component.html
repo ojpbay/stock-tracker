@@ -21,10 +21,12 @@
       @if (store.hasResults() && !store.loading()) {
         <mat-nav-list>
           @for (result of store.results(); track result.symbol) {
-            <mat-list-item (click)="navigateToDetail(result.symbol)">
+            <mat-list-item [lines]="2" (click)="navigateToDetail(result.symbol)">
               <span matListItemTitle>{{ result.symbol }}</span>
               <span matListItemLine>{{ result.companyName }} &bull; {{ result.exchange }}</span>
-              <mat-icon matListItemMeta>chevron_right</mat-icon>
+              <div matListItemMeta>
+                <mat-icon fontIcon="chevron_right"></mat-icon>
+              </div>
             </mat-list-item>
           }
         </mat-nav-list>

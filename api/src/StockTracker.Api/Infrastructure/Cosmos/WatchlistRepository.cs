@@ -39,7 +39,7 @@ public class WatchlistRepository(CosmosClient cosmosClient, IOptions<CosmosDbOpt
     {
         try
         {
-            var response = await Container.ReadItemAsync<Watchlist>(id, new PartitionKey(id), cancellationToken: cancellationToken);
+            var response = await Container.ReadItemAsync<Watchlist>(id, new PartitionKey(id), cancellationToken: CancellationToken.None);
             return response.Resource;
         }
         catch (CosmosException ex) when (ex.StatusCode == System.Net.HttpStatusCode.NotFound)

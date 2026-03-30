@@ -21,7 +21,7 @@
 - [x] T003 Add NuGet packages to `api/src/StockTracker.Api`: `Microsoft.Azure.Cosmos`, `MediatR`, `FluentValidation.AspNetCore`, `Microsoft.AspNetCore.OpenApi`
 - [x] T004 Add NuGet packages to `api/tests/StockTracker.UnitTests`: `xunit`, `Moq`, `FluentAssertions`, project reference to `StockTracker.Api`
 - [x] T005 Add NuGet packages to `api/tests/StockTracker.IntegrationTests`: `xunit`, `Microsoft.AspNetCore.Mvc.Testing`, `FluentAssertions`, project reference to `StockTracker.Api`
-- [x] T006 [P] Initialize Angular 20 project in `client/` using Angular CLI (v20 latest available): `ng new client --standalone --routing --style=scss`
+- [x] T006 [P] Initialize Angular 21 project in `client/` using Angular CLI (v21 latest available): `ng new client --standalone --routing --style=scss`
 - [x] T007 [P] Add Angular dependencies: `@angular/material`, `@ngrx/signals`, `ng2-charts`, `chart.js`
 - [x] T008 Configure Jest for Angular: create `client/jest.config.js`, `client/setup-jest.ts`, install `jest`, `jest-preset-angular`, `@types/jest`; replaced Karma in `angular.json` with jest runner
 - [x] T009 Create `client/proxy.conf.json` to proxy `/api/*` to `http://localhost:5000`; referenced in `client/angular.json` under `serve.options.proxyConfig`
@@ -101,13 +101,13 @@
 ### Implementation for User Story 2
 
 - [x] T044 [P] [US2] Implement `Watchlist` domain entity in `api/src/StockTracker.Api/Domain/Watchlist.cs`: properties matching data-model.md; `AddOrUpdateHolding(HoldingSummary)` method recalculates `totalUnits` and `averagePurchasePrice`
-- [x] T045 [P] [US2] Implement `Holding` domain entity (embedded) in `api/src/StockTracker.Api/Domain/Holding.cs`: `holdingId`, `stockSymbol`, `companyName`, `exchange`, `totalUnits`, `averagePurchasePrice`, `lastPurchaseDate`, `status`
+- [x] T045 [P] [US2] Implement `HoldingSummary` domain record (embedded) in `api/src/StockTracker.Api/Domain/HoldingSummary.cs`: `holdingId`, `stockSymbol`, `companyName`, `exchange`, `totalUnits`, `averagePurchasePrice`, `lastPurchaseDate`, `status` (`HoldingStatus` enum: Active/Closed)
 - [x] T046 [US2] Implement `WatchlistRepository` in `api/src/StockTracker.Api/Infrastructure/Cosmos/WatchlistRepository.cs`: `GetAllAsync`, `GetByIdAsync`, `CreateAsync`, `UpdateAsync`, `DeleteAsync` using `Microsoft.Azure.Cosmos` container client (depends T044, T045)
 - [x] T047 [US2] Implement List/Create/Get/Update/Delete Watchlist features (query+command+handler+validator per operation) in `api/src/StockTracker.Api/Features/Watchlists/` (depends T046)
 - [x] T048 [US2] Implement `WatchlistsController` in `api/src/StockTracker.Api/Features/Watchlists/WatchlistsController.cs`: all 5 endpoints from contracts/api.md (depends T047)
 - [x] T049 [US2] Implement `AddHoldingCommand`, `AddHoldingCommandValidator`, `AddHoldingHandler` in `api/src/StockTracker.Api/Features/Holdings/AddHolding/`: validates symbol via `IStockDataService`; calls `WatchlistRepository` to save; returns updated holding summary (depends T046)
 - [x] T050 [US2] Implement `HoldingsController` in `api/src/StockTracker.Api/Features/Holdings/HoldingsController.cs`: `POST /api/watchlists/{watchlistId}/holdings` (depends T049)
-- [x] T051 [P] [US2] Create `WatchlistsStore` in `client/src/app/features/watchlists/store/watchlists.store.ts`: `signalStore({ providedIn: 'WatchlistsFeatureComponent' })` with `withState({ watchlists, selectedId, loading, error })`, `withComputed({ selectedWatchlist })`, `withMethods({ loadWatchlists, createWatchlist, updateWatchlist, deleteWatchlist, selectWatchlist })`
+- [x] T051 [P] [US2] Create `WatchlistsStore` in `client/src/app/features/watchlists/store/watchlists.store.ts`: `signalStore()` (feature-scoped — no `providedIn`; provided via component `providers` array) with `withState({ watchlists, selectedId, loading, error })`, `withComputed({ selectedWatchlist })`, `withMethods({ loadWatchlists, createWatchlist, updateWatchlist, deleteWatchlist, selectWatchlist })`
 - [x] T052 [P] [US2] Create `WatchlistsService` in `client/src/app/features/watchlists/services/watchlists.service.ts`: typed `HttpClient` calls for all 5 watchlist endpoints
 - [x] T053 [P] [US2] Create `HoldingsService` in `client/src/app/features/holdings/services/holdings.service.ts`: typed `HttpClient` call for `POST /api/watchlists/{id}/holdings`
 - [x] T054 [US2] Create `WatchlistListComponent` in `client/src/app/features/watchlists/list/watchlist-list.component.ts`: `MatList` of watchlists; "New Watchlist" button; navigates to edit (depends T051, T052)
@@ -139,7 +139,7 @@
 - [x] T064 [P] [US3] Create `DashboardStore` (root-scoped) in `client/src/app/features/dashboard/store/dashboard.store.ts`: `signalStore({ providedIn: 'root' })` with `withState({ dashboardData, loading, error })`, `withComputed({ holdingRows, summary })`, `withMethods({ loadDashboard })`, `withHooks({ onInit })` for auto-load
 - [x] T065 [P] [US3] Create `DashboardService` in `client/src/app/features/dashboard/services/dashboard.service.ts`: typed `HttpClient` call to `GET /api/watchlists/{id}/dashboard`
 - [x] T066 [US3] Create `DashboardComponent` in `client/src/app/features/dashboard/dashboard.component.ts`: `MatTable` with columns (name, symbol, units, lastPurchaseDate, avgPrice, currentValue, P&L); summary panel with overall totals; uses `DashboardStore` signals (depends T064, T065)
-- [x] T067 [US3] Create `HoldingRowComponent` in `client/src/app/features/dashboard/holding-row/holding-row.component.ts`: renders a single holding row; uses `pnl-indicator` component; clicking a row navigates to transaction history (depends T021)
+- [ ] T067 [US3] Create `HoldingRowComponent` in `client/src/app/features/dashboard/holding-row/holding-row.component.ts`: renders a single holding row; uses `pnl-indicator` component; clicking a row navigates to transaction history (depends T021) — **NOTE**: currently holding rows are rendered inline in `dashboard.component.ts`/`.html`; extract to dedicated component
 - [x] T068 [US3] Create `PnlChartComponent` in `client/src/app/features/dashboard/pnl-chart/pnl-chart.component.ts`: `ng2-charts` line/bar chart showing P&L trend per holding; chart data derived from `DashboardStore` via `computed()`; colour-coded datasets (positive = green, negative = red)
 - [x] T069 [US3] Configure `client/src/app/features/dashboard/dashboard.routes.ts`; register as default route in `app.routes.ts`
 
@@ -165,7 +165,7 @@
 
 ### Implementation for User Story 4
 
-- [x] T077 [P] [US4] Implement `Transaction` domain entity + `TransactionType` enum in `api/src/StockTracker.Api/Domain/Transaction.cs` and `api/src/StockTracker.Api/Domain/TransactionType.cs`: factory methods `CreateBuy(...)`, `CreateSell(...)`, `CreateDividend(...)`; immutable properties
+- [x] T077 [P] [US4] Implement `Transaction` domain entity in `api/src/StockTracker.Api/Domain/Transaction.cs`: includes co-located `TransactionType` enum (Buy/Sell/Dividend); factory methods `CreateBuy(...)`, `CreateSell(...)`, `CreateDividend(...)`; immutable properties
 - [x] T078 [US4] Implement `TransactionRepository` in `api/src/StockTracker.Api/Infrastructure/Cosmos/TransactionRepository.cs`: `CreateAsync`, `GetByHoldingAsync(watchlistId, holdingId)`, `GetByWatchlistAsync(watchlistId)` using `transactions` container (depends T077)
 - [x] T079 [US4] Implement `AddTransactionCommand`, `AddTransactionCommandValidator`, `AddTransactionHandler` in `api/src/StockTracker.Api/Features/Transactions/AddTransaction/`: validates Buy/Sell/Dividend rules; for Sell validates units against current holding; saves transaction; updates holding summary on watchlist document (depends T078, T046)
 - [x] T080 [US4] Implement `ListTransactionsQuery`, `ListTransactionsHandler` in `api/src/StockTracker.Api/Features/Transactions/ListTransactions/`: returns transactions for a holding with optional `type` and date-range filters, sorted by `transactionDate` descending (depends T078)
@@ -175,7 +175,7 @@
 - [x] T084 [P] [US4] Create `TransactionsService` in `client/src/app/features/transactions/services/transactions.service.ts`: typed `HttpClient` calls for `POST` and `GET` transaction endpoints
 - [x] T085 [US4] Create `AddTransactionComponent` in `client/src/app/features/transactions/add-transaction/add-transaction.component.ts`: `MatButtonToggle` for type (Buy/Sell/Dividend); conditional `MatFormField` groups per type; `MatDatepicker` for date; submits via `TransactionsStore.addTransaction()` (depends T083, T084)
 - [x] T086 [US4] Create `TransactionHistoryComponent` in `client/src/app/features/transactions/transaction-history/transaction-history.component.ts`: `MatTable` with columns (type icon, date, units, price, amount); `MatChip` type filter; navigates to `AddTransactionComponent` via FAB (depends T083, T084)
-- [x] T087 [US4] Configure `client/src/app/features/transactions/transactions.routes.ts`; wire transaction history link from `HoldingRowComponent` (T067); wire add-transaction FAB
+- [x] T087 [US4] Configure `client/src/app/features/transactions/transactions.routes.ts`; wire transaction history link from dashboard table rows (T067 pending extraction to `HoldingRowComponent`); wire add-transaction FAB
 
 **Checkpoint**: Full transaction lifecycle works. Buy/Sell/Dividend recorded correctly. Holding units and average price update after each transaction. Transaction history shows chronological list. All US4 tests pass.
 

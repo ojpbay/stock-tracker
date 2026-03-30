@@ -84,12 +84,12 @@ stock-tracker/
 │   │       │       └── GetDashboard/
 │   │       ├── Domain/
 │   │       │   ├── Watchlist.cs
-│   │       │   ├── Holding.cs
-│   │       │   ├── Transaction.cs
-│   │       │   └── TransactionType.cs
+│   │       │   ├── HoldingSummary.cs
+│   │       │   └── Transaction.cs
 │   │       ├── Infrastructure/
 │   │       │   ├── Cosmos/
 │   │       │   │   ├── CosmosDbInitialiser.cs
+│   │       │   │   ├── CosmosDbOptions.cs
 │   │       │   │   ├── WatchlistRepository.cs
 │   │       │   │   └── TransactionRepository.cs
 │   │       │   └── StockData/
@@ -142,8 +142,7 @@ stock-tracker/
 │   │   │   │   │   │   ├── stock-search.component.ts
 │   │   │   │   │   │   └── stock-search.component.spec.ts
 │   │   │   │   │   ├── detail/
-│   │   │   │   │   │   ├── stock-detail.component.ts
-│   │   │   │   │   │   └── stock-detail.component.spec.ts
+│   │   │   │   │   │   └── stock-detail.component.ts
 │   │   │   │   │   └── stocks.routes.ts
 │   │   │   │   ├── watchlists/
 │   │   │   │   │   ├── store/
@@ -176,13 +175,11 @@ stock-tracker/
 │   │   │   │       ├── services/
 │   │   │   │       │   └── dashboard.service.ts
 │   │   │   │       ├── dashboard.component.ts
-│   │   │   │       ├── dashboard.component.spec.ts
-│   │   │   │       ├── holding-row/
-│   │   │   │       │   └── holding-row.component.ts
+│   │   │   │       ├── dashboard.component.spec.ts   # TODO: T061 not yet implemented
 │   │   │   │       └── pnl-chart/
 │   │   │   │           └── pnl-chart.component.ts  # Chart.js via ng2-charts
 │   │   │   ├── app.config.ts
-│   │   │   ├── app.component.ts
+│   │   │   ├── app.ts
 │   │   │   └── app.routes.ts
 │   │   ├── environments/
 │   │   │   ├── environment.ts
@@ -238,7 +235,7 @@ Five stores serve the application state:
 | `DashboardStore` | Root (`providedIn: 'root'`) | portfolio total, summary P&L | `withState`, `withComputed`, `withMethods` |
 | `StocksStore` | Feature-scoped | search results, selected quote, loading/error | `withState`, `withComputed`, `withMethods` |
 | `WatchlistsStore` | Feature-scoped | watchlist list, selected watchlist | `withState`, `withComputed`, `withMethods` |
-| `HoldingsStore` | Feature-scoped | holdings for active watchlist | `withEntities<Holding>()`, `withState`, `withComputed` |
+| `HoldingsStore` | Feature-scoped | holdings for active watchlist | `withEntities<HoldingSummary>()`, `withState`, `withComputed` |
 | `TransactionsStore` | Feature-scoped | transactions for active holding | `withEntities<Transaction>()`, `withState`, `withMethods` |
 
 All async operations follow the standardised pattern:

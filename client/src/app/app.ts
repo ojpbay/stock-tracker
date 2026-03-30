@@ -1,10 +1,10 @@
 import { Component } from '@angular/core';
-import { RouterOutlet, RouterLink, RouterLinkActive } from '@angular/router';
-import { MatToolbarModule } from '@angular/material/toolbar';
-import { MatSidenavModule } from '@angular/material/sidenav';
-import { MatListModule } from '@angular/material/list';
-import { MatIconModule } from '@angular/material/icon';
 import { MatButtonModule } from '@angular/material/button';
+import { MatIconModule } from '@angular/material/icon';
+import { MatListModule } from '@angular/material/list';
+import { MatSidenavModule } from '@angular/material/sidenav';
+import { MatToolbarModule } from '@angular/material/toolbar';
+import { RouterLink, RouterLinkActive, RouterOutlet } from '@angular/router';
 
 @Component({
   selector: 'app-root',
@@ -19,61 +19,7 @@ import { MatButtonModule } from '@angular/material/button';
     MatIconModule,
     MatButtonModule,
   ],
-  template: `
-    <mat-sidenav-container class="sidenav-container">
-      <mat-sidenav #sidenav mode="side" [opened]="true" class="sidenav">
-
-        <!-- Logo / Brand -->
-        <div class="sidenav-brand">
-          <div class="brand-icon">
-            <mat-icon>trending_up</mat-icon>
-          </div>
-          <div class="brand-text">
-            <span class="brand-name">StockTracker</span>
-            <span class="brand-sub">PRO</span>
-          </div>
-        </div>
-
-        <div class="nav-section-label">MARKETS</div>
-        <mat-nav-list>
-          <a mat-list-item routerLink="/stocks" routerLinkActive="active-link">
-            <mat-icon matListItemIcon>search</mat-icon>
-            <span matListItemTitle>Stock Search</span>
-          </a>
-          <a mat-list-item routerLink="/watchlists" routerLinkActive="active-link">
-            <mat-icon matListItemIcon>bookmark</mat-icon>
-            <span matListItemTitle>Watchlists</span>
-          </a>
-        </mat-nav-list>
-
-        <div class="sidenav-footer">
-          <div class="market-status">
-            <span class="status-dot"></span>
-            <span class="status-text">Markets Open</span>
-          </div>
-        </div>
-      </mat-sidenav>
-
-      <mat-sidenav-content>
-        <mat-toolbar class="toolbar">
-          <button mat-icon-button (click)="sidenav.toggle()" aria-label="Toggle navigation" class="menu-btn">
-            <mat-icon>menu</mat-icon>
-          </button>
-          <div class="toolbar-spacer"></div>
-          <div class="toolbar-right">
-            <span class="live-badge">
-              <span class="live-dot"></span>
-              LIVE
-            </span>
-          </div>
-        </mat-toolbar>
-
-        <main class="main-content">
-          <router-outlet />
-        </main>
-      </mat-sidenav-content>
-    </mat-sidenav-container>
-  `,
+  templateUrl: './app.html',
   styles: [`
     .sidenav-container {
       height: 100vh;

@@ -135,23 +135,12 @@ describe('DashboardComponent', () => {
     expect(emptyState.textContent).toContain('No holdings yet');
   });
 
-  it('should render holdings table when holdings are present', async () => {
-    const store = makeStoreMock({
-      hasData: signal(true),
-      holdings: signal([mockHolding]),
-      summary: signal(mockSummary),
-    });
-    const fixture = await setup('wl-1', store);
-    const table = fixture.nativeElement.querySelector('table.holdings-table');
-    expect(table).not.toBeNull();
-    expect(fixture.nativeElement.textContent).toContain('AAPL');
-    expect(fixture.nativeElement.textContent).toContain('Apple Inc.');
-  });
-
   it('should render summary stats when data is available', async () => {
+    // holdings kept empty so the MatTable is not rendered — cell-content tests live
+    // in holding-row.component.spec.ts where the two-phase detectChanges pattern is used.
     const store = makeStoreMock({
       hasData: signal(true),
-      holdings: signal([mockHolding]),
+      holdings: signal([]),
       summary: signal(mockSummary),
     });
     const fixture = await setup('wl-1', store);
@@ -159,16 +148,5 @@ describe('DashboardComponent', () => {
     const labelTexts = Array.from(statLabels).map((el: any) => el.textContent.trim());
     expect(labelTexts).toContain('Total Cost Basis');
     expect(labelTexts).toContain('Current Value');
-  });
-
-  it('should show N/A for holding with null currentPrice', async () => {
-    const holding = { ...mockHolding, currentPrice: null, currentValue: null, unrealisedPnL: null };
-    const store = makeStoreMock({
-      hasData: signal(true),
-      holdings: signal([holding] as any),
-      summary: signal(mockSummary),
-    });
-    const fixture = await setup('wl-1', store);
-    expect(fixture.nativeElement.textContent).toContain('N/A');
   });
 });

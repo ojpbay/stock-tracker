@@ -10,6 +10,7 @@ import { DecimalPipe } from '@angular/common';
 import { DashboardStore } from './store/dashboard.store';
 import { PnlIndicatorComponent } from '../../shared/components/pnl-indicator/pnl-indicator.component';
 import { PnlChartComponent } from './pnl-chart/pnl-chart.component';
+import { HoldingRowComponent } from './holding-row/holding-row.component';
 import { provideCharts, withDefaultRegisterables } from 'ng2-charts';
 
 const COLUMNS = ['symbol', 'units', 'avgPrice', 'currentPrice', 'currentValue', 'pnl'];
@@ -28,6 +29,7 @@ const COLUMNS = ['symbol', 'units', 'avgPrice', 'currentPrice', 'currentValue', 
     RouterLink,
     PnlIndicatorComponent,
     PnlChartComponent,
+    HoldingRowComponent,
   ],
   providers: [provideCharts(withDefaultRegisterables())],
   templateUrl: './dashboard.component.html',

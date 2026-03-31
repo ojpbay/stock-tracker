@@ -84,12 +84,12 @@ stock-tracker/
 │   │       │       └── GetDashboard/
 │   │       ├── Domain/
 │   │       │   ├── Watchlist.cs
-│   │       │   ├── Holding.cs
-│   │       │   ├── Transaction.cs
-│   │       │   └── TransactionType.cs
+│   │       │   ├── HoldingSummary.cs
+│   │       │   └── Transaction.cs
 │   │       ├── Infrastructure/
 │   │       │   ├── Cosmos/
 │   │       │   │   ├── CosmosDbInitialiser.cs
+│   │       │   │   ├── CosmosDbOptions.cs
 │   │       │   │   ├── WatchlistRepository.cs
 │   │       │   │   └── TransactionRepository.cs
 │   │       │   └── StockData/
@@ -142,8 +142,7 @@ stock-tracker/
 │   │   │   │   │   │   ├── stock-search.component.ts
 │   │   │   │   │   │   └── stock-search.component.spec.ts
 │   │   │   │   │   ├── detail/
-│   │   │   │   │   │   ├── stock-detail.component.ts
-│   │   │   │   │   │   └── stock-detail.component.spec.ts
+│   │   │   │   │   │   └── stock-detail.component.ts
 │   │   │   │   │   └── stocks.routes.ts
 │   │   │   │   ├── watchlists/
 │   │   │   │   │   ├── store/
@@ -177,12 +176,10 @@ stock-tracker/
 │   │   │   │       │   └── dashboard.service.ts
 │   │   │   │       ├── dashboard.component.ts
 │   │   │   │       ├── dashboard.component.spec.ts
-│   │   │   │       ├── holding-row/
-│   │   │   │       │   └── holding-row.component.ts
 │   │   │   │       └── pnl-chart/
 │   │   │   │           └── pnl-chart.component.ts  # Chart.js via ng2-charts
 │   │   │   ├── app.config.ts
-│   │   │   ├── app.component.ts
+│   │   │   ├── app.ts
 │   │   │   └── app.routes.ts
 │   │   ├── environments/
 │   │   │   ├── environment.ts
@@ -213,17 +210,17 @@ All technology decisions are resolved. See [research.md](research.md) for full d
 
 **Key resolved decisions**:
 
-| Area | Decision |
-|------|----------|
-| Angular state | **NgRx Signal Store** (`@ngrx/signals` v21) — feature stores + `withEntities()` for collections |
-| Angular testing | Jest + jest-preset-angular; stores tested via TestBed with `patchState` |
-| Chart integration | ng2-charts (thin Chart.js wrapper) |
-| .NET architecture | Vertical Slice + MediatR |
-| Cosmos driver | `Microsoft.Azure.Cosmos` SDK directly |
-| Cosmos local dev | Docker Linux Emulator |
-| Stock data provider | Finnhub (60 req/min free tier) |
-| OpenAPI | Built-in `AddOpenApi()` (.NET 10) |
-| Integration testing | `WebApplicationFactory` + Cosmos Emulator |
+| Area                | Decision                                                                                        |
+| ------------------- | ----------------------------------------------------------------------------------------------- |
+| Angular state       | **NgRx Signal Store** (`@ngrx/signals` v21) — feature stores + `withEntities()` for collections |
+| Angular testing     | Jest + jest-preset-angular; stores tested via TestBed with `patchState`                         |
+| Chart integration   | ng2-charts (thin Chart.js wrapper)                                                              |
+| .NET architecture   | Vertical Slice + MediatR                                                                        |
+| Cosmos driver       | `Microsoft.Azure.Cosmos` SDK directly                                                           |
+| Cosmos local dev    | Docker Linux Emulator                                                                           |
+| Stock data provider | Finnhub (60 req/min free tier)                                                                  |
+| OpenAPI             | Built-in `AddOpenApi()` (.NET 10)                                                               |
+| Integration testing | `WebApplicationFactory` + Cosmos Emulator                                                       |
 
 ---
 
@@ -233,15 +230,16 @@ All technology decisions are resolved. See [research.md](research.md) for full d
 
 Five stores serve the application state:
 
-| Store | Scope | Key State | Uses |
-|-------|-------|-----------|------|
-| `DashboardStore` | Root (`providedIn: 'root'`) | portfolio total, summary P&L | `withState`, `withComputed`, `withMethods` |
-| `StocksStore` | Feature-scoped | search results, selected quote, loading/error | `withState`, `withComputed`, `withMethods` |
-| `WatchlistsStore` | Feature-scoped | watchlist list, selected watchlist | `withState`, `withComputed`, `withMethods` |
-| `HoldingsStore` | Feature-scoped | holdings for active watchlist | `withEntities<Holding>()`, `withState`, `withComputed` |
-| `TransactionsStore` | Feature-scoped | transactions for active holding | `withEntities<Transaction>()`, `withState`, `withMethods` |
+| Store               | Scope                       | Key State                                     | Uses                                                          |
+| ------------------- | --------------------------- | --------------------------------------------- | ------------------------------------------------------------- |
+| `DashboardStore`    | Root (`providedIn: 'root'`) | portfolio total, summary P&L                  | `withState`, `withComputed`, `withMethods`                    |
+| `StocksStore`       | Feature-scoped              | search results, selected quote, loading/error | `withState`, `withComputed`, `withMethods`                    |
+| `WatchlistsStore`   | Feature-scoped              | watchlist list, selected watchlist            | `withState`, `withComputed`, `withMethods`                    |
+| `HoldingsStore`     | Feature-scoped              | holdings for active watchlist                 | `withEntities<HoldingSummary>()`, `withState`, `withComputed` |
+| `TransactionsStore` | Feature-scoped              | transactions for active holding               | `withEntities<Transaction>()`, `withState`, `withMethods`     |
 
 All async operations follow the standardised pattern:
+
 ```typescript
 methodName: async () => {
   patchState(store, { loading: true, error: null });
@@ -251,7 +249,7 @@ methodName: async () => {
   } catch (err) {
     patchState(store, { error: err.message, loading: false });
   }
-}
+};
 ```
 
 ### Data Model
@@ -259,6 +257,7 @@ methodName: async () => {
 See [data-model.md](data-model.md) for full schema.
 
 **Summary**:
+
 - **`watchlists` container** (partition key: `/id`): Stores watchlist metadata + embedded holdings summary array.
 - **`transactions` container** (partition key: `/watchlistId`): Immutable transaction ledger (Buy / Sell / Dividend).
 
@@ -268,19 +267,19 @@ See [contracts/api.md](contracts/api.md) for full endpoint specifications.
 
 **Endpoint summary**:
 
-| Method | Path | Purpose |
-|--------|------|---------|
-| GET | `/api/stocks/search?q=` | Search stocks by name or symbol |
-| GET | `/api/stocks/{symbol}` | Get live stock quote |
-| GET | `/api/watchlists` | List all watchlists |
-| POST | `/api/watchlists` | Create watchlist |
-| GET | `/api/watchlists/{id}` | Get watchlist with holdings |
-| PUT | `/api/watchlists/{id}` | Update name/description |
-| DELETE | `/api/watchlists/{id}` | Delete watchlist + transactions |
-| POST | `/api/watchlists/{id}/holdings` | Add stock to watchlist (initial buy) |
-| POST | `/api/watchlists/{wId}/holdings/{hId}/transactions` | Add buy/sell/dividend |
-| GET | `/api/watchlists/{wId}/holdings/{hId}/transactions` | List transaction history |
-| GET | `/api/watchlists/{id}/dashboard` | Full P&L dashboard with live prices |
+| Method | Path                                                | Purpose                              |
+| ------ | --------------------------------------------------- | ------------------------------------ |
+| GET    | `/api/stocks/search?q=`                             | Search stocks by name or symbol      |
+| GET    | `/api/stocks/{symbol}`                              | Get live stock quote                 |
+| GET    | `/api/watchlists`                                   | List all watchlists                  |
+| POST   | `/api/watchlists`                                   | Create watchlist                     |
+| GET    | `/api/watchlists/{id}`                              | Get watchlist with holdings          |
+| PUT    | `/api/watchlists/{id}`                              | Update name/description              |
+| DELETE | `/api/watchlists/{id}`                              | Delete watchlist + transactions      |
+| POST   | `/api/watchlists/{id}/holdings`                     | Add stock to watchlist (initial buy) |
+| POST   | `/api/watchlists/{wId}/holdings/{hId}/transactions` | Add buy/sell/dividend                |
+| GET    | `/api/watchlists/{wId}/holdings/{hId}/transactions` | List transaction history             |
+| GET    | `/api/watchlists/{id}/dashboard`                    | Full P&L dashboard with live prices  |
 
 ### Quickstart
 
@@ -293,6 +292,7 @@ See [quickstart.md](quickstart.md) for developer setup instructions.
 No constitution principles are defined for this project. No violations to report.
 
 The design adheres to general software engineering best practices:
+
 - Clear separation of concerns (domain, infrastructure, features, signal stores)
 - Testable by design (repositories behind interfaces, MediatR handlers independently testable, stores injectable and testable via TestBed)
 - NgRx Signal Store adds appropriate structure for the 5-feature scope without over-engineering

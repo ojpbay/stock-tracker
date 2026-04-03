@@ -1,4 +1,4 @@
-import { AfterViewInit, Component, OnInit, ViewChild, inject, signal } from '@angular/core';
+import { AfterViewInit, Component, Injector, OnInit, ViewChild, afterNextRender, inject, signal } from '@angular/core';
 import { FormBuilder, FormControl, ReactiveFormsModule, Validators } from '@angular/forms';
 import { MatButtonModule } from '@angular/material/button';
 import { MatNativeDateModule, provideNativeDateAdapter } from '@angular/material/core';
@@ -98,6 +98,7 @@ interface SelectedStock {
 export class AddHoldingDialogComponent implements OnInit, AfterViewInit {
   @ViewChild('stepper') private stepper!: MatStepper;
 
+  private readonly injector = inject(Injector);
   protected readonly store = inject(StocksStore);
   private readonly dialogRef = inject(MatDialogRef<AddHoldingDialogComponent>);
   protected readonly data = inject<AddHoldingDialogData>(MAT_DIALOG_DATA);
@@ -140,11 +141,10 @@ export class AddHoldingDialogComponent implements OnInit, AfterViewInit {
 
   ngAfterViewInit(): void {
     if (this.data.symbol && this.stepper) {
-      // Symbol pre-provided: skip Step 1 and go directly to purchase details
-      setTimeout(() => {
+      afterNextRender(() => {
         this.stepper.next();
         this.currentStep.set(1);
-      }, 0);
+      }, { injector: this.injector });
     }
   }
 
@@ -155,7 +155,7 @@ export class AddHoldingDialogComponent implements OnInit, AfterViewInit {
       exchange: result.exchange,
     });
     this.store.clearResults();
-    setTimeout(() => this.stepper.next());
+    this.stepper.next();
   }
 
   protected confirm(): void {

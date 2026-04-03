@@ -155,7 +155,7 @@ export class AddHoldingDialogComponent implements OnInit, AfterViewInit {
       exchange: result.exchange,
     });
     this.store.clearResults();
-    this.stepper.next();
+    setTimeout(() => this.stepper.next());
   }
 
   protected confirm(): void {

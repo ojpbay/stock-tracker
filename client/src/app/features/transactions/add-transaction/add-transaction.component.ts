@@ -139,7 +139,7 @@ export class AddTransactionComponent implements OnInit {
     date: [new Date(), Validators.required],
     units: [0, [Validators.min(0.0001)]],
     pricePerUnit: [0, [Validators.min(0.0001)]],
-    dividendAmount: [0, [Validators.min(0.0001)]],
+    dividendAmount: [0, []],
   });
 
   ngOnInit(): void {
@@ -149,6 +149,19 @@ export class AddTransactionComponent implements OnInit {
 
   protected onTypeChange(type: TransactionType): void {
     this.selectedType = type;
+    const { units, pricePerUnit, dividendAmount } = this.form.controls;
+    if (type === 'Buy' || type === 'Sell') {
+      units.setValidators([Validators.min(0.0001)]);
+      pricePerUnit.setValidators([Validators.min(0.0001)]);
+      dividendAmount.clearValidators();
+    } else {
+      dividendAmount.setValidators([Validators.min(0.0001)]);
+      units.clearValidators();
+      pricePerUnit.clearValidators();
+    }
+    units.updateValueAndValidity();
+    pricePerUnit.updateValueAndValidity();
+    dividendAmount.updateValueAndValidity();
   }
 
   protected onSubmit(): void {

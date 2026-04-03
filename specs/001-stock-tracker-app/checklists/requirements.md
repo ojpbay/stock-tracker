@@ -32,4 +32,5 @@
 ## Notes
 
 - All checklist items passed on first validation iteration.
+- 2026-03-31: Extended User Story 2 with scenario 6 (add holding from within watchlist view) and added FR-015 to cover the in-watchlist 'Add Holding' flow.
 - Spec is ready to proceed to `/speckit.clarify` or `/speckit.plan`.

@@ -97,6 +97,7 @@
 - [x] T041 [P] [US2] Integration test `POST /api/watchlists/{id}/holdings` in `api/tests/StockTracker.IntegrationTests/Holdings/AddHoldingIntegrationTests.cs`: adds holding; returns updated holding summary; symbol not found returns 400
 - [x] T042 [P] [US2] Unit test `WatchlistsStore` in `client/src/app/features/watchlists/store/watchlists.store.spec.ts`: `loadWatchlists` populates state; `createWatchlist` appends to list; `updateWatchlist` patches in place
 - [x] T043 [P] [US2] Component test `WatchlistEditComponent` in `client/src/app/features/watchlists/edit/watchlist-edit.component.spec.ts`: form validation; submit calls store method
+- [x] T093 [P] [US2] Component test `AddHoldingDialogComponent` in `client/src/app/features/holdings/add-holding/add-holding-dialog.component.spec.ts`: Step 1 search input triggers `StocksStore.search()`; selecting result advances stepper to Step 2; Step 2 form validation (units > 0, date not future); Confirm calls `HoldingsStore.addHolding()` and dialog closes; pre-filled symbol skips to Step 2
 
 ### Implementation for User Story 2
 
@@ -112,10 +113,10 @@
 - [x] T053 [P] [US2] Create `HoldingsService` in `client/src/app/features/holdings/services/holdings.service.ts`: typed `HttpClient` call for `POST /api/watchlists/{id}/holdings`
 - [x] T054 [US2] Create `WatchlistListComponent` in `client/src/app/features/watchlists/list/watchlist-list.component.ts`: `MatList` of watchlists; "New Watchlist" button; navigates to edit (depends T051, T052)
 - [x] T055 [US2] Create `WatchlistEditComponent` in `client/src/app/features/watchlists/edit/watchlist-edit.component.ts`: `MatFormField` name + description form; create/update via store; delete with `MatDialog` confirmation (depends T051, T052)
-- [x] T056 [US2] Create `AddHoldingComponent` in `client/src/app/features/holdings/add-holding/add-holding.component.ts`: form for units, price-per-unit, date (`MatDatepicker`); submits via `HoldingsService`; navigates back on success (depends T051, T053)
-- [x] T057 [US2] Configure `client/src/app/features/watchlists/watchlists.routes.ts` and `client/src/app/features/holdings/holdings.routes.ts`; register under app routes; wire "Add to Watchlist" button in `StockDetailComponent` (T036) to navigate to `AddHoldingComponent`
+- [x] T056 [US2] Create `AddHoldingDialogComponent` in `client/src/app/features/holdings/add-holding/add-holding-dialog.component.ts`: Angular Material `MatDialog` component using `MatStepper [linear]="true"` with two steps — **Step 1**: search input with 300 ms debounce calling a locally-provided `StocksStore` instance (`search()` method); results list shows symbol, company name, exchange; selection locks step and stores `{ symbol, companyName, exchange }` as local dialog state; **Step 2**: `mat-form-field` fields for units (decimal, > 0), pricePerUnit (decimal, > 0), transactionDate (`mat-datepicker`, not future), optional notes; Confirm button calls `HoldingsStore.addHolding(watchlistId, dto)` and closes dialog on success; dialog receives `watchlistId` via `MAT_DIALOG_DATA`; when opened from `StockDetailComponent`, symbol is pre-filled and stepper starts at Step 2 (depends T051, T053)
+- [x] T057 [US2] Configure `client/src/app/features/watchlists/watchlists.routes.ts` and `client/src/app/features/holdings/holdings.routes.ts`; register under app routes; wire "Add to Watchlist" `MatButton` in `StockDetailComponent` (T036) to open `AddHoldingDialogComponent` via `MatDialog.open()` with pre-filled symbol; wire 'Add Holding' `MatFab` button in `DashboardComponent` (T066) to open `AddHoldingDialogComponent` starting at Step 1 (inline stock search)
 
-**Checkpoint**: Full watchlist CRUD works. User can create a watchlist, add a stock with purchase details, and see it listed. All US2 tests pass.
+**Checkpoint**: Full watchlist CRUD works. User can create a watchlist, add a holding via the two-step inline search dialog (both from 'Add Holding' in the watchlist/dashboard view and from 'Add to Watchlist' in stock detail), and see it listed. All US2 tests pass.
 
 ---
 
@@ -130,7 +131,7 @@
 - [x] T058 [P] [US3] Unit test `GetDashboardHandler` in `api/tests/StockTracker.UnitTests/Features/Dashboard/GetDashboardHandlerTests.cs`: mock `WatchlistRepository` + `IStockDataService`; verify P&L calculations (unrealised = units × (currentPrice − avgPurchasePrice)); stale price flag when provider unavailable
 - [x] T059 [P] [US3] Integration test `GET /api/watchlists/{id}/dashboard` in `api/tests/StockTracker.IntegrationTests/Dashboard/DashboardIntegrationTests.cs`: seeded watchlist returns correct summary structure; 404 for unknown watchlist
 - [x] T060 [P] [US3] Unit test `DashboardStore` in `client/src/app/features/dashboard/store/dashboard.store.spec.ts`: `loadDashboard` populates holdings with P&L values; `isLoading` signal true during load; summary totals computed correctly
-- [ ] T061 [P] [US3] Component test `DashboardComponent` in `client/src/app/features/dashboard/dashboard.component.spec.ts`: renders holdings table with correct column values; `pnl-indicator` rendered per holding
+- [x] T061 [P] [US3] Component test `DashboardComponent` in `client/src/app/features/dashboard/dashboard.component.spec.ts`: renders holdings table with correct column values; `pnl-indicator` rendered per holding
 
 ### Implementation for User Story 3
 
@@ -138,10 +139,9 @@
 - [x] T063 [US3] Implement `DashboardController` in `api/src/StockTracker.Api/Features/Dashboard/DashboardController.cs`: `GET /api/watchlists/{id}/dashboard` (depends T062)
 - [x] T064 [P] [US3] Create `DashboardStore` (root-scoped) in `client/src/app/features/dashboard/store/dashboard.store.ts`: `signalStore({ providedIn: 'root' })` with `withState({ dashboardData, loading, error })`, `withComputed({ holdingRows, summary })`, `withMethods({ loadDashboard })`, `withHooks({ onInit })` for auto-load
 - [x] T065 [P] [US3] Create `DashboardService` in `client/src/app/features/dashboard/services/dashboard.service.ts`: typed `HttpClient` call to `GET /api/watchlists/{id}/dashboard`
-- [x] T066 [US3] Create `DashboardComponent` in `client/src/app/features/dashboard/dashboard.component.ts`: `MatTable` with columns (name, symbol, units, lastPurchaseDate, avgPrice, currentValue, P&L); summary panel with overall totals; uses `DashboardStore` signals (depends T064, T065)
-- [x] T067 [US3] Create `HoldingRowComponent` in `client/src/app/features/dashboard/holding-row/holding-row.component.ts`: renders a single holding row; uses `pnl-indicator` component; clicking a row navigates to transaction history (depends T021)
-- [x] T068 [US3] Create `PnlChartComponent` in `client/src/app/features/dashboard/pnl-chart/pnl-chart.component.ts`: `ng2-charts` line/bar chart showing P&L trend per holding; chart data derived from `DashboardStore` via `computed()`; colour-coded datasets (positive = green, negative = red)
-- [x] T069 [US3] Configure `client/src/app/features/dashboard/dashboard.routes.ts`; register as default route in `app.routes.ts`
+- [x] T066 [US3] Create `DashboardComponent` in `client/src/app/features/dashboard/dashboard.component.ts`: `MatTable` with columns (name, symbol, units, lastPurchaseDate, avgPrice, currentValue, P&L); summary panel with overall totals; uses `DashboardStore` signals; includes `MatFab` 'Add Holding' button that opens `AddHoldingDialogComponent` (T056) via `MatDialog.open()` with the current watchlistId (depends T064, T065)
+- [x] T067 [US3] Create `PnlChartComponent` in `client/src/app/features/dashboard/pnl-chart/pnl-chart.component.ts`: `ng2-charts` line/bar chart showing P&L trend per holding; chart data derived from `DashboardStore` via `computed()`; colour-coded datasets (positive = green, negative = red)
+- [x] T068 [US3] Configure `client/src/app/features/dashboard/dashboard.routes.ts`; register as default route in `app.routes.ts`
 
 **Checkpoint**: Dashboard loads with live prices and correct P&L per holding. Chart renders. Overall summary is accurate. All US3 tests pass.
 
@@ -155,27 +155,27 @@
 
 ### Tests for User Story 4
 
-- [x] T070 [P] [US4] Unit test `AddTransactionHandler` in `api/tests/StockTracker.UnitTests/Features/Transactions/AddTransactionHandlerTests.cs`: Buy recalculates weighted average price; Sell updates units and rejects oversell; Dividend records amount; future date rejected
-- [x] T071 [P] [US4] Unit test `Transaction` domain entity in `api/tests/StockTracker.UnitTests/Domain/TransactionTests.cs`: factory methods for Buy/Sell/Dividend enforce field rules
-- [x] T072 [P] [US4] Integration test `POST /api/watchlists/{wId}/holdings/{hId}/transactions` in `api/tests/StockTracker.IntegrationTests/Transactions/AddTransactionIntegrationTests.cs`: Buy returns updated holding; Sell beyond units returns 400 with `INSUFFICIENT_UNITS`; Dividend records income
-- [x] T073 [P] [US4] Integration test `GET /api/watchlists/{wId}/holdings/{hId}/transactions` in `api/tests/StockTracker.IntegrationTests/Transactions/ListTransactionsIntegrationTests.cs`: returns chronological list; `type` filter works; date range filter works
-- [x] T074 [P] [US4] Unit test `TransactionsStore` in `client/src/app/features/transactions/store/transactions.store.spec.ts`: `loadTransactions` populates entities; `addTransaction` appends and triggers holding update; error state on failure
-- [x] T075 [P] [US4] Unit test `HoldingsStore` in `client/src/app/features/holdings/store/holdings.store.spec.ts`: `withEntities` operations; `addHolding` adds entity; `updateHolding` patches correctly
-- [x] T076 [P] [US4] Component test `AddTransactionComponent` in `client/src/app/features/transactions/add-transaction/add-transaction.component.spec.ts`: Buy form shows units + price; Dividend form shows amount only; validation prevents future dates
+- [x] T069 [P] [US4] Unit test `AddTransactionHandler` in `api/tests/StockTracker.UnitTests/Features/Transactions/AddTransactionHandlerTests.cs`: Buy recalculates weighted average price; Sell updates units and rejects oversell; Dividend records amount; future date rejected
+- [x] T070 [P] [US4] Unit test `Transaction` domain entity in `api/tests/StockTracker.UnitTests/Domain/TransactionTests.cs`: factory methods for Buy/Sell/Dividend enforce field rules
+- [x] T071 [P] [US4] Integration test `POST /api/watchlists/{wId}/holdings/{hId}/transactions` in `api/tests/StockTracker.IntegrationTests/Transactions/AddTransactionIntegrationTests.cs`: Buy returns updated holding; Sell beyond units returns 400 with `INSUFFICIENT_UNITS`; Dividend records income
+- [x] T072 [P] [US4] Integration test `GET /api/watchlists/{wId}/holdings/{hId}/transactions` in `api/tests/StockTracker.IntegrationTests/Transactions/ListTransactionsIntegrationTests.cs`: returns chronological list; `type` filter works; date range filter works
+- [x] T073 [P] [US4] Unit test `TransactionsStore` in `client/src/app/features/transactions/store/transactions.store.spec.ts`: `loadTransactions` populates entities; `addTransaction` appends and triggers holding update; error state on failure
+- [x] T074 [P] [US4] Unit test `HoldingsStore` in `client/src/app/features/holdings/store/holdings.store.spec.ts`: `withEntities` operations; `addHolding` adds entity; `updateHolding` patches correctly
+- [x] T075 [P] [US4] Component test `AddTransactionComponent` in `client/src/app/features/transactions/add-transaction/add-transaction.component.spec.ts`: Buy form shows units + price; Dividend form shows amount only; validation prevents future dates
 
 ### Implementation for User Story 4
 
-- [x] T077 [P] [US4] Implement `Transaction` domain entity in `api/src/StockTracker.Api/Domain/Transaction.cs`: includes co-located `TransactionType` enum (Buy/Sell/Dividend); factory methods `CreateBuy(...)`, `CreateSell(...)`, `CreateDividend(...)`; immutable properties
-- [x] T078 [US4] Implement `TransactionRepository` in `api/src/StockTracker.Api/Infrastructure/Cosmos/TransactionRepository.cs`: `CreateAsync`, `GetByHoldingAsync(watchlistId, holdingId)`, `GetByWatchlistAsync(watchlistId)` using `transactions` container (depends T077)
-- [x] T079 [US4] Implement `AddTransactionCommand`, `AddTransactionCommandValidator`, `AddTransactionHandler` in `api/src/StockTracker.Api/Features/Transactions/AddTransaction/`: validates Buy/Sell/Dividend rules; for Sell validates units against current holding; saves transaction; updates holding summary on watchlist document (depends T078, T046)
-- [x] T080 [US4] Implement `ListTransactionsQuery`, `ListTransactionsHandler` in `api/src/StockTracker.Api/Features/Transactions/ListTransactions/`: returns transactions for a holding with optional `type` and date-range filters, sorted by `transactionDate` descending (depends T078)
-- [x] T081 [US4] Implement `TransactionsController` in `api/src/StockTracker.Api/Features/Transactions/TransactionsController.cs`: `POST /api/watchlists/{wId}/holdings/{hId}/transactions` and `GET /api/watchlists/{wId}/holdings/{hId}/transactions` (depends T079, T080)
-- [x] T082 [P] [US4] Create `HoldingsStore` (feature-scoped, `withEntities<HoldingSummary>()`) in `client/src/app/features/holdings/store/holdings.store.ts`: `signalStore()` with `withEntities<HoldingSummary>()`, `withState({ loading, error })`, `withComputed({ allHoldings })`, `withMethods({ loadHoldings, addHolding, updateHolding })`
-- [x] T083 [P] [US4] Create `TransactionsStore` (feature-scoped, `withEntities<Transaction>()`) in `client/src/app/features/transactions/store/transactions.store.ts`: `signalStore()` with `withEntities<Transaction>()`, `withState({ loading, error, activeHoldingId, activeWatchlistId })`, `withMethods({ loadTransactions, addTransaction })`
-- [x] T084 [P] [US4] Create `TransactionsService` in `client/src/app/features/transactions/services/transactions.service.ts`: typed `HttpClient` calls for `POST` and `GET` transaction endpoints
-- [x] T085 [US4] Create `AddTransactionComponent` in `client/src/app/features/transactions/add-transaction/add-transaction.component.ts`: `MatButtonToggle` for type (Buy/Sell/Dividend); conditional `MatFormField` groups per type; `MatDatepicker` for date; submits via `TransactionsStore.addTransaction()` (depends T083, T084)
-- [x] T086 [US4] Create `TransactionHistoryComponent` in `client/src/app/features/transactions/transaction-history/transaction-history.component.ts`: `MatTable` with columns (type icon, date, units, price, amount); `MatChip` type filter; navigates to `AddTransactionComponent` via FAB (depends T083, T084)
-- [x] T087 [US4] Configure `client/src/app/features/transactions/transactions.routes.ts`; wire transaction history link from dashboard table rows (T067 pending extraction to `HoldingRowComponent`); wire add-transaction FAB
+- [x] T076 [P] [US4] Implement `Transaction` domain entity in `api/src/StockTracker.Api/Domain/Transaction.cs`: includes co-located `TransactionType` enum (Buy/Sell/Dividend); factory methods `CreateBuy(...)`, `CreateSell(...)`, `CreateDividend(...)`; immutable properties
+- [x] T077 [US4] Implement `TransactionRepository` in `api/src/StockTracker.Api/Infrastructure/Cosmos/TransactionRepository.cs`: `CreateAsync`, `GetByHoldingAsync(watchlistId, holdingId)`, `GetByWatchlistAsync(watchlistId)` using `transactions` container (depends T076)
+- [x] T078 [US4] Implement `AddTransactionCommand`, `AddTransactionCommandValidator`, `AddTransactionHandler` in `api/src/StockTracker.Api/Features/Transactions/AddTransaction/`: validates Buy/Sell/Dividend rules; for Sell validates units against current holding; saves transaction; updates holding summary on watchlist document (depends T077, T046)
+- [x] T079 [US4] Implement `ListTransactionsQuery`, `ListTransactionsHandler` in `api/src/StockTracker.Api/Features/Transactions/ListTransactions/`: returns transactions for a holding with optional `type` and date-range filters, sorted by `transactionDate` descending (depends T077)
+- [x] T080 [US4] Implement `TransactionsController` in `api/src/StockTracker.Api/Features/Transactions/TransactionsController.cs`: `POST /api/watchlists/{wId}/holdings/{hId}/transactions` and `GET /api/watchlists/{wId}/holdings/{hId}/transactions` (depends T078, T079)
+- [x] T081 [P] [US4] Create `HoldingsStore` (feature-scoped, `withEntities<HoldingSummary>()`) in `client/src/app/features/holdings/store/holdings.store.ts`: `signalStore()` with `withEntities<HoldingSummary>()`, `withState({ loading, error })`, `withComputed({ allHoldings })`, `withMethods({ loadHoldings, addHolding, updateHolding })`
+- [x] T082 [P] [US4] Create `TransactionsStore` (feature-scoped, `withEntities<Transaction>()`) in `client/src/app/features/transactions/store/transactions.store.ts`: `signalStore()` with `withEntities<Transaction>()`, `withState({ loading, error, activeHoldingId, activeWatchlistId })`, `withMethods({ loadTransactions, addTransaction })`
+- [x] T083 [P] [US4] Create `TransactionsService` in `client/src/app/features/transactions/services/transactions.service.ts`: typed `HttpClient` calls for `POST` and `GET` transaction endpoints
+- [x] T084 [US4] Create `AddTransactionComponent` in `client/src/app/features/transactions/add-transaction/add-transaction.component.ts`: `MatButtonToggle` for type (Buy/Sell/Dividend); conditional `MatFormField` groups per type; `MatDatepicker` for date; submits via `TransactionsStore.addTransaction()` (depends T082, T083)
+- [x] T085 [US4] Create `TransactionHistoryComponent` in `client/src/app/features/transactions/transaction-history/transaction-history.component.ts`: `MatTable` with columns (type icon, date, units, price, amount); `MatChip` type filter; navigates to `AddTransactionComponent` via FAB (depends T082, T083)
+- [x] T086 [US4] Configure `client/src/app/features/transactions/transactions.routes.ts`; wire transaction history link from dashboard table rows; wire add-transaction FAB
 
 **Checkpoint**: Full transaction lifecycle works. Buy/Sell/Dividend recorded correctly. Holding units and average price update after each transaction. Transaction history shows chronological list. All US4 tests pass.
 
@@ -185,12 +185,12 @@
 
 **Purpose**: Navigation shell, error visibility, and final integration validation.
 
-- [x] T088 Create application navigation shell in `client/src/app/app.ts`: `MatToolbar` (app title) + `MatSidenav` with `MatNavList` links to Watchlists and Stock Search
-- [x] T089 [P] Add global snackbar notification service in `client/src/app/core/services/notification.service.ts`: exposes `showError(msg)` and `showSuccess(msg)` using `MatSnackBar`; wire into `error.interceptor.ts`
-- [x] T090 [P] Add `DELETE /api/watchlists/{id}` confirmation dialog using `MatDialog` (`ConfirmDialogComponent`) in `WatchlistEditComponent`
-- [x] T091 [P] Add `priceIsStale` staleness indicator in `DashboardComponent`: show `MatTooltip` warning icon when Finnhub price is stale
-- [x] T092 [P] Add API global exception handler middleware in `api/src/StockTracker.Api/Program.cs`: maps unhandled exceptions to `500`; maps `ValidationException` to `400` with field errors
-- [x] T093 Quickstart validation verified: proxy.conf.json → http://localhost:5000 wired in angular.json; appsettings.Development.json present; API builds clean; Angular builds clean; 26 .NET unit tests pass; 39 Angular unit tests pass — runtime e2e requires Docker Cosmos emulator + Finnhub API key (see quickstart.md)
+- [x] T087 Create application navigation shell in `client/src/app/app.ts`: `MatToolbar` (app title) + `MatSidenav` with `MatNavList` links to Watchlists and Stock Search
+- [x] T088 [P] Add global snackbar notification service in `client/src/app/core/services/notification.service.ts`: exposes `showError(msg)` and `showSuccess(msg)` using `MatSnackBar`; wire into `error.interceptor.ts`
+- [x] T089 [P] Add `DELETE /api/watchlists/{id}` confirmation dialog using `MatDialog` (`ConfirmDialogComponent`) in `WatchlistEditComponent`
+- [x] T090 [P] Add `priceIsStale` staleness indicator in `DashboardComponent`: show `MatTooltip` warning icon when Finnhub price is stale
+- [x] T091 [P] Add API global exception handler middleware in `api/src/StockTracker.Api/Program.cs`: maps unhandled exceptions to `500`; maps `ValidationException` to `400` with field errors
+- [x] T092 Quickstart validation verified: proxy.conf.json → http://localhost:5000 wired in angular.json; appsettings.Development.json present; API builds clean; Angular builds clean; 26 .NET unit tests pass; 39 Angular unit tests pass — runtime e2e requires Docker Cosmos emulator + Finnhub API key (see quickstart.md)
 
 ---
 

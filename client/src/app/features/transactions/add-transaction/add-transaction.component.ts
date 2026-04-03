@@ -145,6 +145,7 @@ export class AddTransactionComponent implements OnInit {
   ngOnInit(): void {
     this.watchlistId = this.route.snapshot.paramMap.get('watchlistId') ?? '';
     this.holdingId = this.route.snapshot.paramMap.get('holdingId') ?? '';
+    this.store.setContext({ watchlistId: this.watchlistId, holdingId: this.holdingId });
   }
 
   protected onTypeChange(type: TransactionType): void {

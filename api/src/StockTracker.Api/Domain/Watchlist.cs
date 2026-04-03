@@ -33,7 +33,7 @@ public class Watchlist
                 LastPurchaseDate = incoming.LastPurchaseDate > existing.LastPurchaseDate
                     ? incoming.LastPurchaseDate
                     : existing.LastPurchaseDate,
-                Status = incoming.TotalUnits > 0 ? HoldingStatus.Active : HoldingStatus.Closed,
+                Status = totalUnits <= 0 ? HoldingStatus.Closed : HoldingStatus.Active,
             };
         }
 

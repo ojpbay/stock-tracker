@@ -1,9 +1,12 @@
+using Newtonsoft.Json;
+
 namespace StockTracker.Api.Domain;
 
 public enum TransactionType { Buy, Sell, Dividend }
 
 public class Transaction
 {
+    [JsonProperty("id")]
     public string TransactionId { get; init; } = Guid.NewGuid().ToString();
     public string WatchlistId { get; init; } = string.Empty;
     public string HoldingId { get; init; } = string.Empty;

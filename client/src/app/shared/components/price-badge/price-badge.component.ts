@@ -1,4 +1,4 @@
-import { Component, computed, input } from '@angular/core';
+import { ChangeDetectionStrategy, Component, computed, input } from '@angular/core';
 import { DecimalPipe } from '@angular/common';
 
 @Component({
@@ -6,6 +6,7 @@ import { DecimalPipe } from '@angular/common';
   standalone: true,
   imports: [DecimalPipe],
   templateUrl: './price-badge.component.html',
+  changeDetection: ChangeDetectionStrategy.OnPush,
   styles: [`
     .price-badge {
       display: inline-flex;

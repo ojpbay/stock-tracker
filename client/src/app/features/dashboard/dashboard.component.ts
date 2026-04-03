@@ -1,17 +1,18 @@
-import { Component, OnInit, inject, signal } from '@angular/core';
-import { ActivatedRoute, Router, RouterLink } from '@angular/router';
-import { MatTableModule } from '@angular/material/table';
-import { MatCardModule } from '@angular/material/card';
+import { DecimalPipe } from '@angular/common';
+import { ChangeDetectionStrategy, Component, OnInit, inject, signal } from '@angular/core';
 import { MatButtonModule } from '@angular/material/button';
+import { MatCardModule } from '@angular/material/card';
+import { MatDialog } from '@angular/material/dialog';
 import { MatIconModule } from '@angular/material/icon';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
+import { MatTableModule } from '@angular/material/table';
 import { MatTooltipModule } from '@angular/material/tooltip';
-import { DecimalPipe } from '@angular/common';
-import { DashboardStore } from './store/dashboard.store';
-import { PnlIndicatorComponent } from '../../shared/components/pnl-indicator/pnl-indicator.component';
-import { PnlChartComponent } from './pnl-chart/pnl-chart.component';
-import { HoldingRowComponent } from './holding-row/holding-row.component';
+import { ActivatedRoute, RouterLink } from '@angular/router';
 import { provideCharts, withDefaultRegisterables } from 'ng2-charts';
+import { PnlIndicatorComponent } from '../../shared/components/pnl-indicator/pnl-indicator.component';
+import { AddHoldingDialogComponent } from '../holdings/add-holding/add-holding-dialog.component';
+import { PnlChartComponent } from './pnl-chart/pnl-chart.component';
+import { DashboardStore } from './store/dashboard.store';
 
 const COLUMNS = ['symbol', 'units', 'avgPrice', 'currentPrice', 'currentValue', 'pnl'];
 
@@ -29,10 +30,10 @@ const COLUMNS = ['symbol', 'units', 'avgPrice', 'currentPrice', 'currentValue', 
     RouterLink,
     PnlIndicatorComponent,
     PnlChartComponent,
-    HoldingRowComponent,
   ],
   providers: [provideCharts(withDefaultRegisterables())],
   templateUrl: './dashboard.component.html',
+  changeDetection: ChangeDetectionStrategy.OnPush,
   styles: [`
     .dashboard-container {
       max-width: 1000px;
@@ -257,6 +258,7 @@ const COLUMNS = ['symbol', 'units', 'avgPrice', 'currentPrice', 'currentValue', 
 export class DashboardComponent implements OnInit {
   protected readonly store = inject(DashboardStore);
   private readonly route = inject(ActivatedRoute);
+  private readonly dialog = inject(MatDialog);
 
   protected readonly columns = COLUMNS;
   protected readonly watchlistId = signal('');
@@ -267,5 +269,13 @@ export class DashboardComponent implements OnInit {
       this.watchlistId.set(id);
       this.store.loadDashboard(id);
     }
+  }
+
+  protected openAddHoldingDialog(): void {
+    this.dialog.open(AddHoldingDialogComponent, {
+      data: { watchlistId: this.watchlistId() },
+      width: '540px',
+      disableClose: false,
+    });
   }
 }

@@ -23,7 +23,7 @@ public class TransactionRepository(CosmosClient cosmosClient, IOptions<CosmosDbO
         var response = await Container.CreateItemAsync(
             transaction,
             new PartitionKey(transaction.WatchlistId),
-            cancellationToken: cancellationToken);
+            cancellationToken: CancellationToken.None);
         return response.Resource;
     }
 

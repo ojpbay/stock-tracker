@@ -1,4 +1,4 @@
-import { Component, computed, input } from '@angular/core';
+import { ChangeDetectionStrategy, Component, computed, input } from '@angular/core';
 import { DecimalPipe } from '@angular/common';
 import { MatIconModule } from '@angular/material/icon';
 
@@ -7,6 +7,7 @@ import { MatIconModule } from '@angular/material/icon';
   standalone: true,
   imports: [DecimalPipe, MatIconModule],
   templateUrl: './pnl-indicator.component.html',
+  changeDetection: ChangeDetectionStrategy.OnPush,
   styles: [`
     .pnl-wrapper {
       display: inline-flex;

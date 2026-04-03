@@ -281,6 +281,23 @@ See [contracts/api.md](contracts/api.md) for full endpoint specifications.
 | GET    | `/api/watchlists/{wId}/holdings/{hId}/transactions` | List transaction history             |
 | GET    | `/api/watchlists/{id}/dashboard`                    | Full P&L dashboard with live prices  |
 
+### Add Holding Dialog — Multi-Step UX (FR-015)
+
+The `add-holding` component is launched from the watchlist view via an 'Add Holding' button. It is implemented as a two-step Angular Material dialog:
+
+| Step | Content | Store interaction |
+|------|---------|-------------------|
+| 1 — Search | Debounced search input + results list (symbol, company name, exchange) | Calls `StocksStore.search()` inline; no route change |
+| 2 — Purchase details | Units, price per unit, date (mat-date-picker), optional notes | Calls `HoldingsStore.addHolding()` on confirm |
+
+**Design decisions**:
+- The dialog reuses `StocksStore` (feature-scoped, provided within the dialog component tree) for inline search — the user never leaves the watchlist route.
+- On step 1 result selection the stock symbol and company name are carried into step 2 as local dialog state (not persisted to any store until confirmed).
+- `MatStepper` with `[linear]="true"` enforces the step order.
+- On successful `addHolding()` the dialog closes and `HoldingsStore` entity state updates reactively — no manual page refresh.
+
+**Component location**: `client/src/app/features/holdings/add-holding/add-holding-dialog.component.ts`
+
 ### Quickstart
 
 See [quickstart.md](quickstart.md) for developer setup instructions.

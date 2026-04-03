@@ -1,4 +1,4 @@
-import { Component, OnInit, inject } from '@angular/core';
+import { ChangeDetectionStrategy, Component, OnInit, inject } from '@angular/core';
 import { FormBuilder, ReactiveFormsModule, Validators } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
 import { MatFormFieldModule } from '@angular/material/form-field';
@@ -27,6 +27,7 @@ import { TransactionType } from '../services/transactions.service';
   ],
   providers: [TransactionsStore],
   templateUrl: './add-transaction.component.html',
+  changeDetection: ChangeDetectionStrategy.OnPush,
   styles: [`
     .add-tx-container {
       max-width: 520px;
@@ -138,16 +139,30 @@ export class AddTransactionComponent implements OnInit {
     date: [new Date(), Validators.required],
     units: [0, [Validators.min(0.0001)]],
     pricePerUnit: [0, [Validators.min(0.0001)]],
-    dividendAmount: [0, [Validators.min(0.0001)]],
+    dividendAmount: [0, []],
   });
 
   ngOnInit(): void {
     this.watchlistId = this.route.snapshot.paramMap.get('watchlistId') ?? '';
     this.holdingId = this.route.snapshot.paramMap.get('holdingId') ?? '';
+    this.store.setContext({ watchlistId: this.watchlistId, holdingId: this.holdingId });
   }
 
   protected onTypeChange(type: TransactionType): void {
     this.selectedType = type;
+    const { units, pricePerUnit, dividendAmount } = this.form.controls;
+    if (type === 'Buy' || type === 'Sell') {
+      units.setValidators([Validators.min(0.0001)]);
+      pricePerUnit.setValidators([Validators.min(0.0001)]);
+      dividendAmount.clearValidators();
+    } else {
+      dividendAmount.setValidators([Validators.min(0.0001)]);
+      units.clearValidators();
+      pricePerUnit.clearValidators();
+    }
+    units.updateValueAndValidity();
+    pricePerUnit.updateValueAndValidity();
+    dividendAmount.updateValueAndValidity();
   }
 
   protected onSubmit(): void {

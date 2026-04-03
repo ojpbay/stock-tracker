@@ -1,6 +1,6 @@
 ﻿# stock-tracker Development Guidelines
 
-Auto-generated from all feature plans. Last updated: 2026-03-27
+Auto-generated from all feature plans. Last updated: 2026-03-31
 
 ## Active Technologies
 - Azure Cosmos DB NoSQL — two containers: `watchlists` (partition key: `/id`) and `transactions` (partition key: `/watchlistId`); emulated locally via Docker (001-stock-tracker-app)

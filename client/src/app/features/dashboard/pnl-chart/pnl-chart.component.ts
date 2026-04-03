@@ -1,4 +1,4 @@
-import { Component, input, computed } from '@angular/core';
+import { ChangeDetectionStrategy, Component, input, computed } from '@angular/core';
 import { BaseChartDirective } from 'ng2-charts';
 import { ChartData, ChartOptions } from 'chart.js';
 import { HoldingDashboardRow } from '../services/dashboard.service';
@@ -8,6 +8,7 @@ import { HoldingDashboardRow } from '../services/dashboard.service';
   standalone: true,
   imports: [BaseChartDirective],
   templateUrl: './pnl-chart.component.html',
+  changeDetection: ChangeDetectionStrategy.OnPush,
   styles: [`
     .chart-container {
       position: relative;

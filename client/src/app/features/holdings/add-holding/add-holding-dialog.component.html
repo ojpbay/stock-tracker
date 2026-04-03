@@ -1,0 +1,113 @@
+<h2 mat-dialog-title>Add Holding</h2>
+
+<mat-dialog-content>
+  <mat-stepper [linear]="true" #stepper
+    (selectionChange)="currentStep.set($event.selectedIndex)">
+
+    <!-- Step 1: Stock Search -->
+    <mat-step label="Find Stock" [completed]="!!selectedStock()">
+      <div class="step-content">
+        <mat-form-field appearance="outline" class="full-width">
+          <mat-label>Search by symbol or company name</mat-label>
+          <input matInput [formControl]="searchControl" autocomplete="off" />
+          <mat-icon matSuffix>search</mat-icon>
+        </mat-form-field>
+
+        @if (store.loading()) {
+          <div class="loading-row">
+            <mat-spinner diameter="24" />
+          </div>
+        }
+
+        @if (store.hasResults() && !store.loading()) {
+          <mat-nav-list class="results-list">
+            @for (result of store.results(); track result.symbol) {
+              <a mat-list-item (click)="selectStock(result)">
+                <span matListItemTitle>
+                  <span class="symbol-badge">{{ result.symbol }}</span>
+                  {{ result.companyName }}
+                </span>
+                <span matListItemLine>{{ result.exchange }}</span>
+              </a>
+            }
+          </mat-nav-list>
+        }
+
+        @if (!store.loading() && !store.hasResults() && searchControl.value) {
+          <p class="no-results">No results for "{{ searchControl.value }}"</p>
+        }
+      </div>
+    </mat-step>
+
+    <!-- Step 2: Purchase Details -->
+    <mat-step label="Purchase Details" [stepControl]="purchaseForm">
+      <div class="step-content">
+        @if (selectedStock(); as stock) {
+          <p class="stock-label">
+            <span class="symbol-badge">{{ stock.symbol }}</span>
+            {{ stock.companyName }}
+          </p>
+        }
+
+        <form [formGroup]="purchaseForm">
+          <mat-form-field appearance="outline" class="full-width">
+            <mat-label>Units</mat-label>
+            <input matInput type="number" formControlName="units"
+              min="1" step="1" />
+            @if (purchaseForm.get('units')?.hasError('min')) {
+              <mat-error>Must be greater than zero</mat-error>
+            }
+            @if (purchaseForm.get('units')?.hasError('required')) {
+              <mat-error>Units is required</mat-error>
+            }
+          </mat-form-field>
+
+          <mat-form-field appearance="outline" class="full-width">
+            <mat-label>Price per unit</mat-label>
+            <input matInput type="number" formControlName="pricePerUnit"
+              min="0.0001" step="0.01" />
+            @if (purchaseForm.get('pricePerUnit')?.hasError('min')) {
+              <mat-error>Must be greater than zero</mat-error>
+            }
+            @if (purchaseForm.get('pricePerUnit')?.hasError('required')) {
+              <mat-error>Price is required</mat-error>
+            }
+          </mat-form-field>
+
+          <mat-form-field appearance="outline" class="full-width">
+            <mat-label>Purchase date</mat-label>
+            <input matInput [matDatepicker]="picker"
+              formControlName="purchaseDate" [max]="today" />
+            <mat-datepicker-toggle matIconSuffix [for]="picker" />
+            <mat-datepicker #picker />
+            @if (purchaseForm.get('purchaseDate')?.hasError('required')) {
+              <mat-error>Date is required</mat-error>
+            }
+          </mat-form-field>
+        </form>
+      </div>
+    </mat-step>
+
+  </mat-stepper>
+</mat-dialog-content>
+
+<mat-dialog-actions align="end">
+  <button mat-button mat-dialog-close>Cancel</button>
+  @if (currentStep() === 0) {
+    <button mat-raised-button color="primary"
+      [disabled]="!selectedStock()"
+      (click)="stepper.next()">
+      Next
+    </button>
+  } @else {
+    <button mat-raised-button color="primary"
+      [disabled]="purchaseForm.invalid || submitting()"
+      (click)="confirm()">
+      @if (submitting()) {
+        <mat-spinner diameter="18" style="display:inline-block" />
+      } @else {
+        Add Holding
+      }
+    </button>
+  }
+</mat-dialog-actions>

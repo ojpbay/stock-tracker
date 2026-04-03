@@ -30,6 +30,10 @@ export const TransactionsStore = signalStore(
     dividendTransactions: computed(() => store.entities().filter((t) => t.type === 'Dividend')),
   })),
   withMethods((store, service = inject(TransactionsService)) => ({
+    setContext({ watchlistId, holdingId }: { watchlistId: string; holdingId: string }): void {
+      patchState(store, { activeWatchlistId: watchlistId, activeHoldingId: holdingId });
+    },
+
     loadTransactions: rxMethod<{ watchlistId: string; holdingId: string }>(
       pipe(
         tap(({ holdingId, watchlistId }) =>

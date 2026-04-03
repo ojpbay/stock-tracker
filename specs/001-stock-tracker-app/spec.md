@@ -5,7 +5,7 @@
 **Status**: Draft
 **Input**: User description: "I want to create a stock tracker application to provide the following features: stock lookup by name/symbol, watchlist management with purchase tracking, portfolio dashboards with P&L, and transaction management for buys, sells, and dividends."
 
-## User Scenarios & Testing *(mandatory)*
+## User Scenarios & Testing
 
 ### User Story 1 - Stock Search & Discovery (Priority: P1)
 
@@ -40,6 +40,7 @@ An investor wants to organise their portfolio by creating named watchlists (e.g.
 3. **Given** a user already has a watchlist, **When** they add a stock that is already in that watchlist, **Then** the purchase is recorded as an additional transaction and the holding is updated accordingly.
 4. **Given** a user wants to manage a watchlist, **When** they edit the watchlist, **Then** they can update the name and add or modify the description, and changes are saved.
 5. **Given** a user has a watchlist, **When** they view it, **Then** they see the watchlist name, description (if set), and all stocks currently held.
+6. **Given** a user has opened a watchlist, **When** they click 'Add Holding', **Then** they are presented with a stock search interface where they can search by name or symbol, select a result, enter the number of units, purchase price per unit, and purchase date, and confirm to add the holding to that watchlist.
 
 ---
 
@@ -88,7 +89,7 @@ An investor wants to record ongoing activity against an existing holding: they b
 - How are fractional share purchases handled (e.g., 0.5 units)?
 - What happens when a user records a dividend for a stock they no longer hold (fully sold)?
 
-## Requirements *(mandatory)*
+## Requirements
 
 ### Functional Requirements
 
@@ -106,6 +107,7 @@ An investor wants to record ongoing activity against an existing holding: they b
 - **FR-012**: System MUST maintain a full transaction history for each holding, listing all buys, sales, and dividends in chronological order.
 - **FR-013**: System MUST update units held and dashboard P&L figures immediately after any transaction is recorded, without requiring a manual refresh.
 - **FR-014**: System MUST support fractional unit quantities for purchases and sales.
+- **FR-015**: Users MUST be able to add a holding directly from the watchlist view by clicking 'Add Holding', searching for a stock by name or symbol, entering purchase details (units, price per unit, date), and confirming — without navigating away from the watchlist.
 
 ### Key Entities
 
@@ -114,7 +116,7 @@ An investor wants to record ongoing activity against an existing holding: they b
 - **Holding**: The relationship between a Watchlist and a Stock; tracks total units currently held, weighted average purchase price, and last purchase date; values are derived from the associated transaction history.
 - **Transaction**: A single recorded financial event against a holding — Buy (units + price per unit + date), Sell (units + price per unit + date), or Dividend (amount + date); forms the immutable ledger for each holding.
 
-## Success Criteria *(mandatory)*
+## Success Criteria
 
 ### Measurable Outcomes
 

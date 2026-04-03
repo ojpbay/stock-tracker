@@ -1,4 +1,4 @@
-import { Component, OnInit, inject } from '@angular/core';
+import { ChangeDetectionStrategy, Component, OnInit, inject } from '@angular/core';
 import { FormControl, ReactiveFormsModule } from '@angular/forms';
 import { Router } from '@angular/router';
 import { MatFormFieldModule } from '@angular/material/form-field';
@@ -22,6 +22,7 @@ import { StocksStore } from '../store/stocks.store';
   ],
   providers: [StocksStore],
   templateUrl: './stock-search.component.html',
+  changeDetection: ChangeDetectionStrategy.OnPush,
   styles: [`
     .search-container {
       max-width: 680px;

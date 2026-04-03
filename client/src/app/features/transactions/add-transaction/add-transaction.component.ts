@@ -1,4 +1,4 @@
-import { Component, OnInit, inject } from '@angular/core';
+import { ChangeDetectionStrategy, Component, OnInit, inject } from '@angular/core';
 import { FormBuilder, ReactiveFormsModule, Validators } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
 import { MatFormFieldModule } from '@angular/material/form-field';
@@ -27,6 +27,7 @@ import { TransactionType } from '../services/transactions.service';
   ],
   providers: [TransactionsStore],
   templateUrl: './add-transaction.component.html',
+  changeDetection: ChangeDetectionStrategy.OnPush,
   styles: [`
     .add-tx-container {
       max-width: 520px;

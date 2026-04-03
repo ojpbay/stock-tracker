@@ -1,4 +1,4 @@
-import { Component, OnInit, inject } from '@angular/core';
+import { ChangeDetectionStrategy, Component, OnInit, inject } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { MatCardModule } from '@angular/material/card';
 import { MatButtonModule } from '@angular/material/button';
@@ -24,6 +24,7 @@ import { PriceBadgeComponent } from '../../../shared/components/price-badge/pric
   ],
   providers: [StocksStore],
   templateUrl: './stock-detail.component.html',
+  changeDetection: ChangeDetectionStrategy.OnPush,
   styles: [`
     .detail-container {
       max-width: 700px;

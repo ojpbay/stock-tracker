@@ -1,4 +1,4 @@
-import { Component, OnInit, inject } from '@angular/core';
+import { ChangeDetectionStrategy, Component, OnInit, inject } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { MatTableModule } from '@angular/material/table';
 import { MatButtonModule } from '@angular/material/button';
@@ -23,6 +23,7 @@ const COLUMNS = ['typeIcon', 'date', 'units', 'price', 'amount'];
   ],
   providers: [TransactionsStore],
   templateUrl: './transaction-history.component.html',
+  changeDetection: ChangeDetectionStrategy.OnPush,
   styles: [`
     .history-container {
       max-width: 760px;

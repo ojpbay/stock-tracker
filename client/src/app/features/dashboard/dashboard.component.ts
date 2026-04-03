@@ -1,5 +1,5 @@
 import { DecimalPipe } from '@angular/common';
-import { Component, OnInit, inject, signal } from '@angular/core';
+import { ChangeDetectionStrategy, Component, OnInit, inject, signal } from '@angular/core';
 import { MatButtonModule } from '@angular/material/button';
 import { MatCardModule } from '@angular/material/card';
 import { MatDialog } from '@angular/material/dialog';
@@ -33,6 +33,7 @@ const COLUMNS = ['symbol', 'units', 'avgPrice', 'currentPrice', 'currentValue', 
   ],
   providers: [provideCharts(withDefaultRegisterables())],
   templateUrl: './dashboard.component.html',
+  changeDetection: ChangeDetectionStrategy.OnPush,
   styles: [`
     .dashboard-container {
       max-width: 1000px;

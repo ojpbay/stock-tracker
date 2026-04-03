@@ -1,4 +1,4 @@
-import { Component, OnInit, inject, Inject } from '@angular/core';
+import { ChangeDetectionStrategy, Component, OnInit, inject, Inject } from '@angular/core';
 import { FormBuilder, ReactiveFormsModule, Validators } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
 import { MatFormFieldModule } from '@angular/material/form-field';
@@ -13,6 +13,7 @@ import { WatchlistsService } from '../services/watchlists.service';
   selector: 'app-confirm-dialog',
   standalone: true,
   imports: [MatButtonModule, MatDialogModule],
+  changeDetection: ChangeDetectionStrategy.OnPush,
   template: `
     <div style="padding: 8px 4px 0">
       <h2 mat-dialog-title style="font-family: Inter, sans-serif; font-weight: 700; color: var(--text-primary); font-size: 1.1rem; letter-spacing: -0.01em;">Confirm Delete</h2>
@@ -45,6 +46,7 @@ export class ConfirmDialogComponent {
   ],
   providers: [WatchlistsStore],
   templateUrl: './watchlist-edit.component.html',
+  changeDetection: ChangeDetectionStrategy.OnPush,
   styles: [`
     .edit-container {
       max-width: 560px;

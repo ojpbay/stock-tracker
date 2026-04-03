@@ -1,4 +1,4 @@
-import { AfterViewInit, Component, Injector, OnInit, ViewChild, afterNextRender, inject, signal } from '@angular/core';
+import { AfterViewInit, ChangeDetectionStrategy, Component, Injector, OnInit, ViewChild, afterNextRender, inject, signal } from '@angular/core';
 import { FormBuilder, FormControl, ReactiveFormsModule, Validators } from '@angular/forms';
 import { MatButtonModule } from '@angular/material/button';
 import { MatNativeDateModule, provideNativeDateAdapter } from '@angular/material/core';
@@ -51,6 +51,7 @@ interface SelectedStock {
   ],
   providers: [StocksStore, provideNativeDateAdapter()],
   templateUrl: './add-holding-dialog.component.html',
+  changeDetection: ChangeDetectionStrategy.OnPush,
   styles: [`
     mat-dialog-content {
       min-width: 420px;

@@ -30,8 +30,36 @@ import { StocksStore } from '../store/stocks.store';
       padding: 0;
     }
 
-    .search-header {
+    /* ── Hero section ─────────────────────────────────── */
+    .hero {
+      display: flex;
+      align-items: center;
+      gap: 1.5rem;
       margin-bottom: 2rem;
+    }
+
+    .hero-text {
+      flex: 1;
+      min-width: 0;
+    }
+
+    .hero-art {
+      width: 260px;
+      flex-shrink: 0;
+      display: block;
+      border-radius: 12px;
+    }
+
+    @media (max-width: 520px) {
+      .hero {
+        flex-direction: column;
+        gap: 1rem;
+      }
+      .hero-art {
+        width: 100%;
+        max-width: 340px;
+        margin: 0 auto;
+      }
     }
 
     .page-eyebrow {

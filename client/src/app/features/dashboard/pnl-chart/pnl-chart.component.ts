@@ -8,13 +8,8 @@ import { HoldingDashboardRow } from '../services/dashboard.service';
   standalone: true,
   imports: [BaseChartDirective],
   templateUrl: './pnl-chart.component.html',
+  styleUrl: './pnl-chart.component.scss',
   changeDetection: ChangeDetectionStrategy.OnPush,
-  styles: [`
-    .chart-container {
-      position: relative;
-      height: 200px;
-    }
-  `],
 })
 export class PnlChartComponent {
   readonly holdings = input<HoldingDashboardRow[]>([]);

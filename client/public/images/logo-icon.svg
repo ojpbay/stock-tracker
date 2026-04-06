@@ -1,0 +1,41 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 36 36" fill="none">
+  <defs>
+    <linearGradient id="lb" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0%"   stop-color="#FFFFFF"/>
+      <stop offset="100%" stop-color="#C8DCEA"/>
+    </linearGradient>
+    <linearGradient id="lf" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0%"   stop-color="#FFD060"/>
+      <stop offset="100%" stop-color="#FF8C00" stop-opacity="0"/>
+    </linearGradient>
+  </defs>
+
+  <!-- Exhaust flame -->
+  <path d="M 14.5,27 C 15.5,31 18,35.5 18,35.5
+           C 18,35.5 20.5,31 21.5,27 Z"
+        fill="url(#lf)"/>
+
+  <!-- Rocket body -->
+  <rect x="12" y="12" width="12" height="17" rx="6" fill="url(#lb)"/>
+  <rect x="12" y="12" width="12" height="17" rx="6"
+        fill="none" stroke="#A8C4D4" stroke-width="0.75"/>
+
+  <!-- Nose cone -->
+  <path d="M 12,13 C 12,4 24,4 24,13 Z" fill="#00D4FF"/>
+  <!-- Nose highlight -->
+  <path d="M 13.5,12.5 C 13.5,7.5 16,5 16,12.5 Z"
+        fill="rgba(255,255,255,0.30)"/>
+
+  <!-- Porthole window -->
+  <circle cx="18" cy="20" r="4.5" fill="#0A1628"/>
+  <circle cx="18" cy="20" r="4.5" fill="none"
+          stroke="#00D4FF" stroke-width="1.5"/>
+  <circle cx="18" cy="20" r="2"   fill="#00D4FF" fill-opacity="0.70"/>
+  <!-- Reflection -->
+  <circle cx="16.5" cy="18.5" r="1" fill="rgba(255,255,255,0.55)"/>
+
+  <!-- Left fin -->
+  <path d="M 12,21 L 7,29 L 12,26 Z"  fill="#FFB700"/>
+  <!-- Right fin -->
+  <path d="M 24,21 L 29,29 L 24,26 Z" fill="#FFB700"/>
+</svg>

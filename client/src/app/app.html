@@ -2,15 +2,15 @@
       <mat-sidenav #sidenav mode="side" [opened]="true" class="sidenav">
 
         <!-- Logo / Brand -->
-        <div class="sidenav-brand">
+        <a class="sidenav-brand" routerLink="/stocks">
           <div class="brand-icon">
-            <mat-icon>trending_up</mat-icon>
+            <img src="/images/logo-icon.svg" alt="StockTracker" width="28" height="28" />
           </div>
           <div class="brand-text">
             <span class="brand-name">StockTracker</span>
             <span class="brand-sub">PRO</span>
           </div>
-        </div>
+        </a>
 
         <div class="nav-section-label">MARKETS</div>
         <mat-nav-list>

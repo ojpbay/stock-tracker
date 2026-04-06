@@ -34,7 +34,7 @@ for a feature MUST require opening only one folder.
 
 ### II. Standalone Angular Components with NgRx Signal Store
 
-Every Angular component MUST be declared as `standalone: true`. Feature state MUST be managed
+Every Angular component MUST be declared as `standalone: true`. The template and styles must be contained in corresponding, seperate files. Feature state MUST be managed
 via `signalStore()` from `@ngrx/signals`. Collection state (holdings, transactions) MUST use
 `withEntities<T>()` from `@ngrx/signals/entities`. Template control flow MUST use `@if`/`@for`
 syntax — not `*ngIf`/`*ngFor` directives. Change detection strategy musy be `OnPush`

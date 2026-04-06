@@ -44,6 +44,8 @@ import { RouterLink, RouterLinkActive, RouterOutlet } from '@angular/router';
       padding: 20px 16px 16px;
       border-bottom: 1px solid var(--border-subtle);
       margin-bottom: 8px;
+      text-decoration: none;
+      cursor: pointer;
     }
 
     .brand-icon {

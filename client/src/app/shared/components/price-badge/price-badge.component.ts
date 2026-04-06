@@ -6,53 +6,8 @@ import { DecimalPipe } from '@angular/common';
   standalone: true,
   imports: [DecimalPipe],
   templateUrl: './price-badge.component.html',
+  styleUrl: './price-badge.component.scss',
   changeDetection: ChangeDetectionStrategy.OnPush,
-  styles: [`
-    .price-badge {
-      display: inline-flex;
-      flex-direction: column;
-      gap: 6px;
-    }
-    .current-price {
-      font-size: 2rem;
-      font-weight: 700;
-      color: var(--text-primary);
-      letter-spacing: -0.03em;
-      font-variant-numeric: tabular-nums;
-      font-family: 'Inter', sans-serif;
-      line-height: 1;
-    }
-    .price-change-row {
-      display: inline-flex;
-      align-items: center;
-      gap: 8px;
-    }
-    .price-change {
-      display: inline-flex;
-      align-items: center;
-      gap: 4px;
-      font-size: 0.875rem;
-      font-weight: 600;
-      font-variant-numeric: tabular-nums;
-      padding: 3px 10px;
-      border-radius: 20px;
-    }
-    .positive {
-      color: #FFB700;
-      background: rgba(255, 183, 0, 0.10);
-      border: 1px solid rgba(255, 183, 0, 0.25);
-    }
-    .negative {
-      color: #F05252;
-      background: rgba(240, 82, 82, 0.10);
-      border: 1px solid rgba(240, 82, 82, 0.25);
-    }
-    .neutral {
-      color: #94A3B8;
-      background: rgba(148, 163, 184, 0.08);
-      border: 1px solid rgba(148, 163, 184, 0.15);
-    }
-  `]
 })
 export class PriceBadgeComponent {
   readonly price = input.required<number>();

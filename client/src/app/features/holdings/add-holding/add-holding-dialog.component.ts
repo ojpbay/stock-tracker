@@ -51,50 +51,8 @@ interface SelectedStock {
   ],
   providers: [StocksStore, provideNativeDateAdapter()],
   templateUrl: './add-holding-dialog.component.html',
+  styleUrl: './add-holding-dialog.component.scss',
   changeDetection: ChangeDetectionStrategy.OnPush,
-  styles: [`
-    mat-dialog-content {
-      min-width: 420px;
-      max-width: 520px;
-      padding-top: 8px !important;
-    }
-    .step-content { padding-top: 16px; }
-    .full-width { width: 100%; margin-bottom: 4px; }
-    .loading-row { display: flex; justify-content: center; padding: 12px 0; }
-    .results-list {
-      border: 1px solid var(--border-subtle, rgba(255,255,255,0.08));
-      border-radius: 8px;
-      margin-top: 4px;
-      max-height: 220px;
-      overflow-y: auto;
-      padding: 4px 0 !important;
-    }
-    .symbol-badge {
-      font-family: 'Inter', monospace;
-      font-size: 0.78rem;
-      font-weight: 700;
-      letter-spacing: 0.04em;
-      background: rgba(0,212,255,0.12);
-      border: 1px solid rgba(0,212,255,0.3);
-      color: #00d4ff;
-      padding: 1px 7px;
-      border-radius: 4px;
-      margin-right: 6px;
-    }
-    .no-results {
-      color: var(--text-muted, #888);
-      font-size: 0.875rem;
-      text-align: center;
-      padding: 16px 0;
-    }
-    .stock-label {
-      font-size: 0.9rem;
-      margin-bottom: 16px;
-      display: flex;
-      align-items: center;
-      gap: 4px;
-    }
-  `],
 })
 export class AddHoldingDialogComponent implements OnInit, AfterViewInit {
   @ViewChild('stepper') private stepper!: MatStepper;

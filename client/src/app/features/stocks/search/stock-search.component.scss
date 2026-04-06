@@ -1,0 +1,142 @@
+.search-container {
+  max-width: 680px;
+  margin: 0 auto;
+  padding: 0;
+}
+
+/* ── Hero section ─────────────────────────────────── */
+.hero {
+  display: flex;
+  align-items: center;
+  gap: 1.5rem;
+  margin-bottom: 2rem;
+}
+
+.hero-text {
+  flex: 1;
+  min-width: 0;
+}
+
+.hero-art {
+  width: 260px;
+  flex-shrink: 0;
+  display: block;
+  border-radius: 12px;
+}
+
+@media (max-width: 520px) {
+  .hero {
+    flex-direction: column;
+    gap: 1rem;
+  }
+  .hero-art {
+    width: 100%;
+    max-width: 340px;
+    margin: 0 auto;
+  }
+}
+
+.page-eyebrow {
+  font-size: 0.65rem;
+  font-weight: 700;
+  letter-spacing: 0.15em;
+  text-transform: uppercase;
+  color: var(--accent);
+  margin-bottom: 6px;
+}
+
+.page-title {
+  font-size: 1.6rem;
+  font-weight: 700;
+  color: var(--text-primary);
+  letter-spacing: -0.03em;
+  margin-bottom: 4px;
+}
+
+.page-subtitle {
+  font-size: 0.875rem;
+  color: var(--text-secondary);
+  margin: 0;
+}
+
+.search-box-wrap {
+  position: relative;
+  margin-bottom: 1.5rem;
+}
+
+.search-field {
+  width: 100%;
+}
+
+.loading-container {
+  display: flex;
+  justify-content: center;
+  margin: 1.5rem 0;
+}
+
+.error-message {
+  color: var(--negative);
+  font-size: 0.875rem;
+  padding: 10px 14px;
+  background: var(--negative-dim);
+  border: 1px solid var(--negative-border);
+  border-radius: var(--radius-md);
+  margin-bottom: 1rem;
+}
+
+.no-results {
+  text-align: center;
+  color: var(--text-secondary);
+  font-size: 0.875rem;
+  padding: 2.5rem 1rem;
+}
+
+.results-label {
+  font-size: 0.65rem;
+  font-weight: 600;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--text-muted);
+  padding: 0 0 8px;
+  margin-bottom: 4px;
+}
+
+.results-list {
+  background: var(--bg-card);
+  border: 1px solid var(--border-subtle);
+  border-radius: var(--radius-lg);
+  overflow: hidden;
+  padding: 4px 0 !important;
+}
+
+.result-item {
+  cursor: pointer;
+  transition: background 0.15s ease;
+  border-bottom: 1px solid var(--border-subtle);
+}
+
+.result-item:last-child {
+  border-bottom: none;
+}
+
+.result-item:hover {
+  background: var(--bg-hover) !important;
+}
+
+.symbol-badge {
+  font-family: 'Inter', monospace;
+  font-size: 0.78rem;
+  font-weight: 700;
+  letter-spacing: 0.04em;
+  background: var(--accent-dim);
+  border: 1px solid var(--border-accent);
+  color: var(--accent);
+  padding: 2px 8px;
+  border-radius: 4px;
+  margin-right: 2px;
+}
+
+.chevron-icon {
+  color: var(--text-muted);
+  font-size: 18px;
+}

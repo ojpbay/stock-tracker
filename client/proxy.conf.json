@@ -4,5 +4,12 @@
     "secure": false,
     "changeOrigin": true,
     "logLevel": "info"
+  },
+  "/trivia-api": {
+    "target": "http://localhost:5201",
+    "pathRewrite": { "^/trivia-api": "/api" },
+    "secure": false,
+    "changeOrigin": true,
+    "logLevel": "info"
   }
 }

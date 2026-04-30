@@ -31,4 +31,9 @@ export const routes: Routes = [
     loadChildren: () =>
       import('./features/transactions/transactions.routes').then((m) => m.TRANSACTIONS_ROUTES),
   },
+  {
+    path: 'trivia',
+    loadChildren: () =>
+      import('./features/trivia/trivia.routes').then((m) => m.TRIVIA_ROUTES),
+  },
 ];
